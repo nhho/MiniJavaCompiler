@@ -3,7 +3,7 @@ options {
 }
 
 PARSER_BEGIN(MiniJavaParser)
-package myparser;
+  package myparser;
 
   import syntaxtree.*;
   public class MiniJavaParser {}
@@ -20,9 +20,9 @@ SKIP : /* WHITE SPACE */
 
 SPECIAL_TOKEN : /* COMMENTS */
 {
-  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
-| <FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
-| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+  < SINGLE_LINE_COMMENT: "//" (~["\n", "\r"])* ("\n" | "\r" | "\r\n") >
+| < FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*", "/"] (~["*"])* "*"))* "/" >
+| < MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*", "/"] (~["*"])* "*"))* "/" >
 }
 
 TOKEN :
@@ -34,16 +34,17 @@ TOKEN :
 | < LBRACE: "{" >
 | < RBRACE: "}" >
 | < SEMICOLON: ";" >
+| < COMMA: "," >
 | < DOT: "." >
 | < ASSIGN: "=" >
 | < LT: "<" >
 | < PLUS: "+" >
 | < MINUS: "-" >
-| < AND : "&" >
+| < TIME: "*" >
+| < AND : "&&" >
 | < NOT : "!" >
 | < BOOLEAN: "boolean" >
 | < CLASS: "class" >
-| < INTERFACE: "interface" >
 | < ELSE: "else" >
 | < EXTENDS: "extends" >
 | < FALSE: "false" >
@@ -65,14 +66,13 @@ TOKEN :
 
 TOKEN : /* LITERALS */
 {
-  < INTEGER_LITERAL: ( ["1"-"9"] (["0"-"9"])* | "0" ) >
+  < INTEGER_LITERAL: (["1"-"9"] (["0"-"9"])* | "0") >
 }
 
 TOKEN : /* IDENTIFIERS */
 {
-  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
-|
-  < #LETTER:
+  < IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)* >
+| < #LETTER:
       [
        "\u0024",
        "\u0041"-"\u005a",
@@ -89,8 +89,7 @@ TOKEN : /* IDENTIFIERS */
        "\uf900"-"\ufaff"
       ]
   >
-|
-  < #DIGIT:
+| < #DIGIT:
       [
        "\u0030"-"\u0039",
        "\u0660"-"\u0669",
@@ -118,81 +117,90 @@ TOKEN : /* IDENTIFIERS */
 
 
 Program Goal() :
-{ MainClass m;
+{
+  MainClass m;
   ClassDeclList cl = new ClassDeclList();
   ClassDecl c;
 }
 {
   m=MainClass()
-  ( c=ClassDeclaration() { cl.addElement(c); } )*
+  (c=ClassDeclaration() {cl.addElement(c);})*
   <EOF>
-  { return new Program(m,cl); }
+  {return new Program(m,cl);}
 }
 
 MainClass MainClass() :
-{ Identifier i1,i2;
+{
+  Identifier i1, i2;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
-  Statement s; }
+  Statement s;
+}
 {
-  "class" i1=Identifier() "{"
-    "public" "static" "void" "main" "(" "String" "[" "]" i2=Identifier() ")"
-    "{"
-       ( LOOKAHEAD(2) v=VarDeclaration()    { vl.addElement(v); } )*
-       s=Statement()
-     "}"
-  "}"
-  { return new MainClass(i1,i2, vl, s); }
+  <CLASS> i1=Identifier()
+      <LBRACE>
+      <PUBLIC> <STATIC> <VOID> <MAIN>
+      <LPAREN> <STRING> <LSQPAREN> <RSQPAREN> i2 = Identifier() <RPAREN> <LBRACE>
+      (LOOKAHEAD(2) v=VarDeclaration() {vl.addElement(v);})*
+      s=Statement()
+      <RBRACE>
+      <RBRACE>
+  {return new MainClass(i1, i2, vl, s);}
 }
 
 ClassDecl ClassDeclaration() :
-{ ClassDecl c; }
+{ClassDecl c;}
 {
   (
   LOOKAHEAD(3)
   c=ClassDeclarationSimple()
-|
-  c=ClassDeclarationExtends()
+| c=ClassDeclarationExtends()
   )
-  { return c; }
+  {return c;}
 }
 
 ClassDecl ClassDeclarationSimple() :
-{ Identifier i;
+{
+  Identifier i;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
   MethodDecl m;
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  "class" i=Identifier() "{" ( v=VarDeclaration()    { vl.addElement(v); } )*
-                             ( m=MethodDeclaration() { ml.addElement(m); } )*
-                       "}"
-  { return new ClassDeclSimple(i,vl,ml); }
+  <CLASS> i=Identifier()
+      <LBRACE>
+      (v=VarDeclaration() {vl.addElement(v);})*
+      (m=MethodDeclaration() {ml.addElement(m);})*
+      <RBRACE>
+  {return new ClassDeclSimple(i, vl, ml);}
 }
 
 ClassDecl ClassDeclarationExtends() :
-{ Identifier i1,i2;
+{
+  Identifier i1, i2;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
   MethodDecl m;
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  "class" i1=Identifier() "extends" i2=Identifier()
-                       "{"   ( v=VarDeclaration()    { vl.addElement(v); } )*
-                             ( m=MethodDeclaration() { ml.addElement(m); } )*
-                       "}"
-  { return new ClassDeclExtends(i1,i2,vl,ml); }
+  <CLASS> i1=Identifier() <EXTENDS> i2=Identifier()
+      <LBRACE>
+      (v=VarDeclaration() {vl.addElement(v);})*
+      (m=MethodDeclaration() {ml.addElement(m);})*
+      <RBRACE>
+  {return new ClassDeclExtends(i1, i2, vl, ml);}
 }
 
 VarDecl VarDeclaration() :
-{ Type t;
+{
+  Type t;
   Identifier i;
 }
 {
-  t=Type() i=Identifier() ";"
-  { return new VarDecl(t,i); }
+  t=Type() i=Identifier() <SEMICOLON>
+  {return new VarDecl(t,i);}
 }
 
 MethodDecl MethodDeclaration() :
@@ -207,102 +215,99 @@ MethodDecl MethodDeclaration() :
   Exp e;
 }
 {
-  "public" t=Type() i=Identifier()
-  "(" ( fl=FormalParameterList() )? ")"
-  "{" ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )*
-      ( s=Statement() { sl.addElement(s); } )* "return" e=Expression() ";" "}"
-  { return new MethodDecl(t,i,fl,vl,sl,e); }
+  <PUBLIC> t=Type() i=Identifier()
+      <LPAREN> (fl=FormalParameterList())? <RPAREN>
+      <LBRACE>
+	  (LOOKAHEAD(2) v=VarDeclaration() {vl.addElement(v);})*
+      (s=Statement() {sl.addElement(s);})*
+	  <RETURN> e=Expression() <SEMICOLON>
+	  <RBRACE>
+  {return new MethodDecl(t, i, fl, vl, sl, e);}
 }
 
 FormalList FormalParameterList() :
-{ FormalList fl = new FormalList();
+{
+  FormalList fl = new FormalList();
   Formal f;
 }
 {
-  f=FormalParameter() { fl.addElement(f); }
-  ( f=FormalParameterRest() { fl.addElement(f); } )*
-  { return fl; }
+  f=FormalParameter() {fl.addElement(f);}
+  (f=FormalParameterRest() {fl.addElement(f);})*
+  {return fl;}
 }
 
 Formal FormalParameter() :
-{ Type t;
+{
+  Type t;
   Identifier i;
 }
 {
   t=Type() i=Identifier()
-  { return new Formal(t,i); }
+  {return new Formal(t, i);}
 }
 
 Formal FormalParameterRest() :
-{ Formal f; }
+{Formal f;}
 {
-  "," f=FormalParameter()
-  { return f; }
+  <COMMA> f=FormalParameter()
+  {return f;}
 }
 
 Type Type() :
-{ Type t; }
+{Type t;}
 {
   (
   LOOKAHEAD(3)
   t=ArrayType()
-|
-  t=BooleanType()
-|
-  t=IntegerType()
-|
-  t=IdentifierType()
+| t=BooleanType()
+| t=IntegerType()
+| t=IdentifierType()
   )
-  { return t; }
+  {return t;}
 }
 
 Type ArrayType() :
 {}
 {
-  "int" "[" "]"
-  { return new IntArrayType(); }
+  <INTEGER> <LSQPAREN> <RSQPAREN>
+  {return new IntArrayType();}
 }
 
 Type BooleanType() :
 {}
 {
-  "boolean"
-  { return new BooleanType(); }
+  <BOOLEAN>
+  {return new BooleanType();}
 }
 
 Type IntegerType() :
 {}
 {
-  "int"
-  { return new IntegerType(); }
+  <INTEGER>
+  {return new IntegerType();}
 }
 
 Type IdentifierType() :
-{ Token t; }
+{Token t;}
 {
   t=<IDENTIFIER>
-  { return new IdentifierType(t.image); }
+  {return new IdentifierType(t.image);}
 }
 
 Statement Statement() :
-{ Statement s; }
+{Statement s;}
 {
   (
   s=Block()
-|
-  LOOKAHEAD(2)
+| LOOKAHEAD(2)
   s=AssignmentStatement()
-|
-  LOOKAHEAD(2)
+| LOOKAHEAD(2)
   s=ArrayAssignmentStatement()
-|
-  s=IfStatement()
-|
-  s=WhileStatement()
-|
-  s=PrintStatement()
+| s=IfStatement()
+| s=WhileStatement()
+| s=PrintStatement()
   )
-  { return s; }
+  {return s;}
 }
 
 Statement Block() :
@@ -311,55 +316,61 @@ Statement Block() :
   StatementList sl = new StatementList();
 }
 {
-  "{" ( s=Statement() { sl.addElement(s); } )* "}"
-  { return new Block(sl); }
+  <LBRACE> (s=Statement() {sl.addElement(s);})* <RBRACE>
+  {return new Block(sl);}
 }
 
 Statement AssignmentStatement() :
-{ Identifier i;
+{
+  Identifier i;
   Exp e;
 }
 {
-  i=Identifier() "=" e=Expression() ";"
-  { return new Assign(i,e); }
+  i=Identifier() <ASSIGN> e=Expression() <SEMICOLON>
+  {return new Assign(i, e);}
 }
 
 Statement ArrayAssignmentStatement() :
-{ Identifier i;
-  Exp e1,e2;
+{
+  Identifier i;
+  Exp e1, e2;
 }
 {
-  i=Identifier() "[" e1=Expression() "]" "=" e2=Expression() ";"
-  { return new ArrayAssign(i,e1,e2); }
+  i=Identifier() <LSQPAREN> e1=Expression() <RSQPAREN>
+      <ASSIGN> e2=Expression() <SEMICOLON>
+  {return new ArrayAssign(i, e1, e2);}
 }
 
 Statement IfStatement() :
-{ Exp e;
-  Statement s1,s2;
+{
+  Exp e;
+  Statement s1, s2;
 }
 {
-  "if" "(" e=Expression() ")" s1=Statement() "else" s2=Statement()
-  { return new If(e,s1,s2); }
+  <IF> <LPAREN> e=Expression() <RPAREN> s1=Statement()
+  <ELSE> s2=Statement()
+  {return new If(e, s1, s2);}
 }
 
 Statement WhileStatement() :
-{ Exp e;
+{
+  Exp e;
   Statement s;
 }
 {
-  "while" "(" e=Expression() ")" s=Statement()
-  { return new While(e,s); }
+  <WHILE> <LPAREN> e=Expression() <RPAREN> s=Statement()
+  {return new While(e, s);}
 }
 
 Statement PrintStatement() :
-{ Exp e; }
+{Exp e;}
 {
-  "System.out.println" "(" e=Expression() ")" ";"
-  { return new Print(e); }
+  <PRINT> <LPAREN> e=Expression() <RPAREN> <SEMICOLON>
+  {return new Print(e);}
 }
 
 Exp Expression() :
-{ Exp e; }
+{Exp e;}
 {
   e=ConditionalAndExpression()
   { return e; }
