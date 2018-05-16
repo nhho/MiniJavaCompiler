@@ -1,3 +1,21 @@
+[A. Instructions]
+  1. run 'make' to compile all necessary files
+  2. run 'java Main < input_file > output.asm'
+
+[B. Assumptions]
+  1. 'input_file' is a semantically valid MiniJava Variant source program
+    MiniJava Variant: (VarDeclaration)* is added at the begining of 'main' in MainClass
+    source: p-asgn4(1).docx
+
+[C. Tests]
+  Describe which cases (1-15, 16) your program can and cannot handles.
+
+[D. Acknowledgement]
+  - no use of third party code, files, and library
+
+[E. Additional Information]
+  - none
+
 Update: May 3
   - Fix a bug in the ArrayLookup() production in minijava.jj.
   - Fix a bug in the PrimaryExpressionWithSuffix in minijava.jj.
