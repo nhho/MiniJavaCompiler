@@ -6,7 +6,7 @@ class test {
 
       {
         x = 10 + 4;
-	System.out.println(x);
+    System.out.println(x);
       }
 
     }

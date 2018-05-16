@@ -5,7 +5,7 @@ import visitor.TypeVisitor;
 public class VarDecl {
   public Type t;
   public Identifier i;
-  
+
   public VarDecl(Type at, Identifier ai) {
     t=at; i=ai;
   }

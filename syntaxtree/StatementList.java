@@ -13,11 +13,11 @@ public class StatementList {
       list.addElement(n);
    }
 
-   public Statement elementAt(int i)  { 
-      return (Statement)list.elementAt(i); 
+   public Statement elementAt(int i)  {
+      return (Statement)list.elementAt(i);
    }
 
-   public int size() { 
-      return list.size(); 
+   public int size() {
+      return list.size();
    }
 }

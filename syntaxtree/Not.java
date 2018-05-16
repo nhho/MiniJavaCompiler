@@ -4,9 +4,9 @@ import visitor.TypeVisitor;
 
 public class Not extends Exp {
   public Exp e;
-  
+
   public Not(Exp ae) {
-    e=ae; 
+    e=ae;
   }
 
   public void accept(Visitor v) {

@@ -7,7 +7,7 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
   static Class currClass;
   static Method currMethod;
   static SymbolTable symbolTable;
-   
+
   public TypeCheckVisitor(SymbolTable s){
     symbolTable = s;
   }
@@ -20,13 +20,13 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
         n.cl.elementAt(i).accept(this);
     }
   }
-  
+
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
       String i1 = n.i1.toString();
       currClass = symbolTable.getClass(i1);
-      
+
       currMethod = currClass.getMethod("main");
 
       n.i2.accept(this);
@@ -37,7 +37,7 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
 
       n.s.accept(this);
   }
-  
+
   // Identifier i;
   // VarDeclList vl;
   // MethodDeclList ml;
@@ -51,7 +51,7 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
         n.ml.elementAt(i).accept(this);
     }
   }
- 
+
   // Identifier i;
   // Identifier j;
   // VarDeclList vl;
@@ -96,8 +96,8 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
         n.sl.elementAt(i).accept(this);
     }
     if (symbolTable.compareTypes(retType, n.e.accept(new TypeCheckExpVisitor()))==false){
-	System.out.println("Wrong return type for method "+ id);
-	System.exit(0);
+    System.out.println("Wrong return type for method "+ id);
+    System.exit(0);
     }
   }
 
@@ -139,15 +139,15 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
        System.exit(-1);
     }
   }
-  
+
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {
     Type t1 = symbolTable.getVarType(currMethod,currClass,n.i.toString());
     Type t2 = n.e.accept(new TypeCheckExpVisitor() );
     if (symbolTable.compareTypes(t1,t2)==false){
-	System.out.println("Type error in assignment to "+n.i.toString());	
-	System.exit(0);
+    System.out.println("Type error in assignment to "+n.i.toString());
+    System.exit(0);
     }
   }
 
@@ -155,13 +155,13 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
   // Exp e1,e2;
   public void visit(ArrayAssign n) {
       Type typeI = symbolTable.getVarType(currMethod,currClass,n.i.toString());
-      
+
       if (! (typeI instanceof IntArrayType) ) {
-	  System.out.println("The identifier in an array assignment"+
-			     "must be of type int []");
-	  System.exit(-1);
+      System.out.println("The identifier in an array assignment"+
+                 "must be of type int []");
+      System.exit(-1);
       }
-      
+
     if (! (n.e1.accept(new TypeCheckExpVisitor()) instanceof IntegerType) ) {
        System.out.println("The first expression in an array assignment"+
                           "must be of type int");

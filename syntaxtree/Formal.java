@@ -5,7 +5,7 @@ import visitor.TypeVisitor;
 public class Formal {
   public Type t;
   public Identifier i;
- 
+
   public Formal(Type at, Identifier ai) {
     t=at; i=ai;
   }

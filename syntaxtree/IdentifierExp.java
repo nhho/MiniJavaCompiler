@@ -4,7 +4,7 @@ import visitor.TypeVisitor;
 
 public class IdentifierExp extends Exp {
   public String s;
-  public IdentifierExp(String as) { 
+  public IdentifierExp(String as) {
     s=as;
   }
 

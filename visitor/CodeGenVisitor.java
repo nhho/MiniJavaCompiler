@@ -9,7 +9,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   static Method currMethod;
   static SymbolTable symbolTable;
   PrintWriter out;
- 
+
   public CodeGenVisitor(SymbolTable s, PrintWriter out) {
     symbolTable = s;
     this.out = out;
@@ -18,14 +18,14 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   // MainClass m;
   // ClassDeclList cl;
   public void visit(Program n) {
-    // Data segment 
+    // Data segment
     out.println(
       ".data\n" +
       "newline: .asciiz \"\\n\"\n" +    // to be used by cgen for "System.out.println()"
-      "msg_index_out_of_bound_exception: .asciiz \"Index out of bound exception\\n\"\n" +   
-      "msg_null_pointer_exception: .asciiz \"Null pointer exception\\n\"\n" +  
+      "msg_index_out_of_bound_exception: .asciiz \"Index out of bound exception\\n\"\n" +
+      "msg_null_pointer_exception: .asciiz \"Null pointer exception\\n\"\n" +
       "\n" +
-      ".text\n" 
+      ".text\n"
     );
 
     n.m.accept(this);
@@ -41,10 +41,10 @@ public class CodeGenVisitor extends DepthFirstVisitor {
         n.cl.elementAt(i).accept(this);
     }
 
-    // Code for some utility functions 
+    // Code for some utility functions
     cgen_supporting_functions();
   }
-  
+
   // Identifier i1,i2;
   // VarDeclList vl;
   // Statement s;
@@ -52,9 +52,9 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     String i1 = n.i1.toString();
     currClass = symbolTable.getClass(i1);
     currMethod = currClass.getMethod("main");   // This is a hack (treat main() as instance method.)
- 
+
     // Can ignore the parameter of main()
-  
+
     // Info about local variables are kept in "currMethod"
 
     // Generate code to reserve space for local variables in stack
@@ -68,7 +68,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   // MethodDeclList ml;
   public void visit(ClassDeclSimple n) {
   }
- 
+
   // Type t;
   // Identifier i;
   // FormalList fl;
@@ -95,7 +95,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   // cgen: System.out.println(e)
   public void visit(Print n) {
   }
-  
+
   // Identifier i;
   // Exp e;
   // cgen: i = e
@@ -201,22 +201,22 @@ public class CodeGenVisitor extends DepthFirstVisitor {
 
     out.println(
       "_null_pointer_exception:\n" +
-      "la $a0, msg_null_pointer_exception\n" + 
+      "la $a0, msg_null_pointer_exception\n" +
       "li $a1, 23\n" +
       "li $v0, 4\n" +
       "syscall\n" +
       "li $v0, 10\n" +
-      "syscall\n" 
+      "syscall\n"
     );
 
     out.println(
       "_array_index_out_of_bound_exception:\n" +
-      "la $a0, msg_index_out_of_bound_exception\n" + 
+      "la $a0, msg_index_out_of_bound_exception\n" +
       "li $a1, 29\n" +
       "li $v0, 4\n" +
       "syscall\n" +
       "li $v0, 10\n" +
-      "syscall\n" 
+      "syscall\n"
     );
 
     out.println(
@@ -226,7 +226,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
       "sll $a0, $a0, 2   # multiple by 4 bytes\n" +
       "li $v0, 9         # allocate space\n" +
       "syscall\n" +
-      "\n" + 
+      "\n" +
       "sw $a2, 0($v0)    # Store array length\n" +
       "addi $t1, $v0, 4  # begin address = ($v0 + 4); address of the first element\n" +
       "add $t2, $v0, $a0 # loop until ($v0 + 4*(length+1)), the address after the last element\n" +

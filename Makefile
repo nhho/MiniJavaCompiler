@@ -39,5 +39,3 @@ test0: test.java
 # To check if test.java is syntactically and semantically correct
 test1: test.java
 	java MainPrettyPrint < test.java 
-
-

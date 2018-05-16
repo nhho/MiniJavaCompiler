@@ -6,7 +6,7 @@ public class Print extends Statement {
   public Exp e;
 
   public Print(Exp ae) {
-    e=ae; 
+    e=ae;
   }
 
   public void accept(Visitor v) {

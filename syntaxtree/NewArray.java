@@ -4,9 +4,9 @@ import visitor.TypeVisitor;
 
 public class NewArray extends Exp {
   public Exp e;
-  
+
   public NewArray(Exp ae) {
-    e=ae; 
+    e=ae;
   }
 
   public void accept(Visitor v) {

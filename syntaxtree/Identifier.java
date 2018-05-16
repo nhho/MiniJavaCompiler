@@ -5,7 +5,7 @@ import visitor.TypeVisitor;
 public class Identifier {
   public String s;
 
-  public Identifier(String as) { 
+  public Identifier(String as) {
     s=as;
   }
 

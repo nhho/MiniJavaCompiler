@@ -13,7 +13,7 @@ public class PrettyPrintVisitor implements Visitor {
         n.cl.elementAt(i).accept(this);
     }
   }
-  
+
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
@@ -56,7 +56,7 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println();
     System.out.println("}");
   }
- 
+
   // Identifier i;
   // Identifier j;
   // VarDeclList vl;
@@ -186,7 +186,7 @@ public class PrettyPrintVisitor implements Visitor {
     n.e.accept(this);
     System.out.print(");");
   }
-  
+
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {

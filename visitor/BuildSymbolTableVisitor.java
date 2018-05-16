@@ -20,12 +20,12 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   // Inside a class (but not in a method) => currMethod is null
   //   Contains field and method declarations
   // Inside a method
-  //   Contains declaration of local variables 
+  //   Contains declaration of local variables
   // These two variables help keep track of the current scope.
   private Class currClass;
   private Method currMethod;
- 
-  // Note: Because in MiniJava there is no nested scopes and all local 
+
+  // Note: Because in MiniJava there is no nested scopes and all local
   // variables can only be declared at the beginning of a method. This "hack"
   // uses two variables instead of a stack to track nested level.
 
@@ -41,13 +41,13 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
     }
     return null;
   }
-  
+
   // Identifier i1 (name of class),i2 (name of argument in main();
   // Statement s;
   public Type visit(MainClass n) {
-     symbolTable.addClass( n.i1.toString(), null); 
+     symbolTable.addClass( n.i1.toString(), null);
      currClass = symbolTable.getClass(n.i1.toString());
-      
+
     //this is an ugly hack.. but its not worth having a Void and
     //String[] type just for one occourance
     currClass.addMethod("main", new IdentifierType("void"));
@@ -56,7 +56,7 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
 
     //currMethod = new Method ("main", new IdentifierType("void"));
     //currMethod.addVar(n.i2.toString(),
-		      //new IdentifierType("String[]"));
+              //new IdentifierType("String[]"));
 
     for ( int i = 0; i < n.vl.size(); i++ ) {
       n.vl.elementAt(i).accept(this);
@@ -65,19 +65,19 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
     n.s.accept(this);
 
     currMethod = null;
-          
+
     return null;
   }
-  
+
   // Identifier i;  (Class name)
   // VarDeclList vl;  (Field declaration)
   // MethodDeclList ml; (Method declaration)
   public Type visit(ClassDeclSimple n) {
     if (!symbolTable.addClass( n.i.toString(), null)){
 
-	System.out.println("Class " +  n.i.toString()
-			   + "is already defined" ); 
-	System.exit(-1);
+    System.out.println("Class " +  n.i.toString()
+               + "is already defined" );
+    System.exit(-1);
     }
 
     // Entering a new class scope (no need to explicitly leave a class scope)
@@ -94,7 +94,7 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
     }
     return null;
   }
- 
+
   // Identifier i; (Class name)
   // Identifier j; (Superclass's name)
   // VarDeclList vl;  (Field declaration)
@@ -102,13 +102,13 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   public Type visit(ClassDeclExtends n) {
     if (!symbolTable.addClass( n.i.toString(),  n.j.toString())) {
       System.out.println("Class " +  n.i.toString()
-			   + "is already defined" ); 
+               + "is already defined" );
       System.exit(-1);
     }
 
     // Entering a new class scope (no need to explicitly leave a class scope)
     currClass = symbolTable.getClass(n.i.toString());
-  
+
     for ( int i = 0; i < n.vl.size(); i++ ) {
       n.vl.elementAt(i).accept(this);
     }
@@ -123,7 +123,7 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   //
   // Field delcaration or local variable declaration
   public Type visit(VarDecl n) {
-    
+
     Type t =  n.t.accept(this);
     String id =  n.i.toString();
 
@@ -132,16 +132,16 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
 
       // Add a field
       if (!currClass.addVar(id,t)) {
-	 System.out.println(id + "is already defined in " 
-			    + currClass.getId()); 
-	 System.exit(-1);
+     System.out.println(id + "is already defined in "
+                + currClass.getId());
+     System.exit(-1);
       }
     } else {
       // Add a local variable
       if (!currMethod.addVar(id,t)){
-        System.out.println(id + "is already defined in " 
-		           + currClass.getId() + "." + currMethod.getId());
-	System.exit(-1);
+        System.out.println(id + "is already defined in "
+                   + currClass.getId() + "." + currMethod.getId());
+    System.exit(-1);
       }
     }
     return null;
@@ -151,22 +151,22 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   // Identifier i; (Method name)
   // FormalList fl; (Formal parameters)
   // VarDeclList vl; (Local variables)
-  // StatementList sl; 
+  // StatementList sl;
   // Exp e; (The expression that evaluates to the return value)
   //
   // Method delcaration
   public Type visit(MethodDecl n) {
     Type t = n.t.accept(this);
     String id = n.i.toString();
-    
+
     if (!currClass.addMethod(id,t)){
-	System.out.println("Method " + id 
-			   + "is already defined in " 
-			   + currClass.getId()); 
-	System.exit(-1);
+    System.out.println("Method " + id
+               + "is already defined in "
+               + currClass.getId());
+    System.exit(-1);
     }
 
-    // Entering a method scope 
+    // Entering a method scope
     currMethod = currClass.getMethod(id);
 
     for ( int i = 0; i < n.fl.size(); i++ ) {
@@ -188,24 +188,24 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
 
   // Type t;
   // Identifier i;
-  // 
+  //
   // Register a formal parameter
   public Type visit(Formal n) {
-      
+
     Type t = n.t.accept(this);
     String id = n.i.toString();
-    
+
     if (!currMethod.addParam(id,t)){
-	System.out.println("Formal" + id + "is already defined in " 
-			   + currClass.getId() + "." +
-			   currMethod.getId());
-	System.exit(-1);
+    System.out.println("Formal" + id + "is already defined in "
+               + currClass.getId() + "." +
+               currMethod.getId());
+    System.exit(-1);
     }
     return null;
   }
 
   public Type visit(IntArrayType n) {
-    return n; 
+    return n;
   }
 
   public Type visit(BooleanType n) {

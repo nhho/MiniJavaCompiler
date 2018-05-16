@@ -25,7 +25,7 @@ SPECIAL_TOKEN : /* COMMENTS */
 | <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
 }
 
-TOKEN : 
+TOKEN :
 {
   < LPAREN: "(" >
 | < RPAREN: ")" >
@@ -39,9 +39,9 @@ TOKEN :
 | < LT: "<" >
 | < PLUS: "+" >
 | < MINUS: "-" >
-| < AND : "&" >   
-| < NOT : "!" >   
-| < BOOLEAN: "boolean" >   
+| < AND : "&" >
+| < NOT : "!" >
+| < BOOLEAN: "boolean" >
 | < CLASS: "class" >
 | < INTERFACE: "interface" >
 | < ELSE: "else" >
@@ -49,7 +49,7 @@ TOKEN :
 | < FALSE: "false" >
 | < IF: "if" >
 | < WHILE: "while" >
-| < INTEGER: "int" >   
+| < INTEGER: "int" >
 | < LENGTH: "length" >
 | < MAIN: "main" >
 | < NEW: "new" >
@@ -60,7 +60,7 @@ TOKEN :
 | < THIS: "this" >
 | < TRUE: "true" >
 | < PRINT: "System.out.println" >
-| < VOID: "void" >         
+| < VOID: "void" >
 }
 
 TOKEN : /* LITERALS */
@@ -118,12 +118,12 @@ TOKEN : /* IDENTIFIERS */
 
 
 Program Goal() :
-{ MainClass m; 
+{ MainClass m;
   ClassDeclList cl = new ClassDeclList();
   ClassDecl c;
 }
 {
-  m=MainClass() 
+  m=MainClass()
   ( c=ClassDeclaration() { cl.addElement(c); } )*
   <EOF>
   { return new Program(m,cl); }
@@ -136,19 +136,19 @@ MainClass MainClass() :
   Statement s; }
 {
   "class" i1=Identifier() "{"
-    "public" "static" "void" "main" "(" "String" "[" "]" i2=Identifier() ")"   
-    "{" 
-       ( LOOKAHEAD(2) v=VarDeclaration()    { vl.addElement(v); } )* 
-       s=Statement() 
+    "public" "static" "void" "main" "(" "String" "[" "]" i2=Identifier() ")"
+    "{"
+       ( LOOKAHEAD(2) v=VarDeclaration()    { vl.addElement(v); } )*
+       s=Statement()
      "}"
   "}"
   { return new MainClass(i1,i2, vl, s); }
 }
 
-ClassDecl ClassDeclaration() :  
+ClassDecl ClassDeclaration() :
 { ClassDecl c; }
 {
-  ( 
+  (
   LOOKAHEAD(3)
   c=ClassDeclarationSimple()
 |
@@ -165,8 +165,8 @@ ClassDecl ClassDeclarationSimple() :
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  "class" i=Identifier() "{" ( v=VarDeclaration()    { vl.addElement(v); } )* 
-                             ( m=MethodDeclaration() { ml.addElement(m); } )* 
+  "class" i=Identifier() "{" ( v=VarDeclaration()    { vl.addElement(v); } )*
+                             ( m=MethodDeclaration() { ml.addElement(m); } )*
                        "}"
   { return new ClassDeclSimple(i,vl,ml); }
 }
@@ -180,23 +180,23 @@ ClassDecl ClassDeclarationExtends() :
 }
 {
   "class" i1=Identifier() "extends" i2=Identifier()
-                       "{"   ( v=VarDeclaration()    { vl.addElement(v); } )* 
-                             ( m=MethodDeclaration() { ml.addElement(m); } )* 
+                       "{"   ( v=VarDeclaration()    { vl.addElement(v); } )*
+                             ( m=MethodDeclaration() { ml.addElement(m); } )*
                        "}"
   { return new ClassDeclExtends(i1,i2,vl,ml); }
 }
 
-VarDecl VarDeclaration() :  
+VarDecl VarDeclaration() :
 { Type t;
   Identifier i;
 }
-{ 
-  t=Type() i=Identifier() ";"      
+{
+  t=Type() i=Identifier() ";"
   { return new VarDecl(t,i); }
 }
 
-MethodDecl MethodDeclaration() :  
-{ 
+MethodDecl MethodDeclaration() :
+{
   Type t;
   Identifier i;
   FormalList fl = new FormalList();
@@ -204,18 +204,18 @@ MethodDecl MethodDeclaration() :
   VarDeclList vl = new VarDeclList();
   Statement s;
   StatementList sl = new StatementList();
-  Exp e; 
+  Exp e;
 }
 {
-  "public" t=Type() i=Identifier() 
-  "(" ( fl=FormalParameterList() )? ")"   
-  "{" ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )* 
+  "public" t=Type() i=Identifier()
+  "(" ( fl=FormalParameterList() )? ")"
+  "{" ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )*
       ( s=Statement() { sl.addElement(s); } )* "return" e=Expression() ";" "}"
   { return new MethodDecl(t,i,fl,vl,sl,e); }
 }
 
 FormalList FormalParameterList() :
-{ FormalList fl = new FormalList(); 
+{ FormalList fl = new FormalList();
   Formal f;
 }
 {
@@ -225,7 +225,7 @@ FormalList FormalParameterList() :
 }
 
 Formal FormalParameter() :
-{ Type t; 
+{ Type t;
   Identifier i;
 }
 {
@@ -251,7 +251,7 @@ Type Type() :
 |
   t=IntegerType()
 |
-  t=IdentifierType()     
+  t=IdentifierType()
   )
   { return t; }
 }
@@ -289,7 +289,7 @@ Statement Statement() :
 {
   (
   s=Block()
-| 
+|
   LOOKAHEAD(2)
   s=AssignmentStatement()
 |
@@ -306,9 +306,9 @@ Statement Statement() :
 }
 
 Statement Block() :
-{ 
+{
   Statement s;
-  StatementList sl = new StatementList(); 
+  StatementList sl = new StatementList();
 }
 {
   "{" ( s=Statement() { sl.addElement(s); } )* "}"
@@ -317,7 +317,7 @@ Statement Block() :
 
 Statement AssignmentStatement() :
 { Identifier i;
-  Exp e; 
+  Exp e;
 }
 {
   i=Identifier() "=" e=Expression() ";"
@@ -338,7 +338,7 @@ Statement IfStatement() :
   Statement s1,s2;
 }
 {
-  "if" "(" e=Expression() ")" s1=Statement() "else" s2=Statement() 
+  "if" "(" e=Expression() ")" s1=Statement() "else" s2=Statement()
   { return new If(e,s1,s2); }
 }
 
@@ -347,7 +347,7 @@ Statement WhileStatement() :
   Statement s;
 }
 {
-  "while" "(" e=Expression() ")" s=Statement() 
+  "while" "(" e=Expression() ")" s=Statement()
   { return new While(e,s); }
 }
 
@@ -368,7 +368,7 @@ Exp Expression() :
 Exp ConditionalAndExpression():
 { Exp e1, e2; }
 {
-  e1=RelationalExpression() 
+  e1=RelationalExpression()
   ( LOOKAHEAD(1) "&&" e2=RelationalExpression() { e1 = new And(e1, e2); } )*
   { return e1; }
 }
@@ -376,24 +376,24 @@ Exp ConditionalAndExpression():
 Exp RelationalExpression():
 { Exp e1, e2; }
 {
-  e1=AdditiveExpression() 
+  e1=AdditiveExpression()
   (
-    LOOKAHEAD(1) "<" e2=AdditiveExpression() { e1 = new LessThan(e1, e2); } 
+    LOOKAHEAD(1) "<" e2=AdditiveExpression() { e1 = new LessThan(e1, e2); }
   )*
   { return e1; }
 }
 
 Exp AdditiveExpression():
-{ Exp e1, e2; 
+{ Exp e1, e2;
   int opType;
   Token t;
 }
 {
 
-  e1=MultiplicativeExpression() 
+  e1=MultiplicativeExpression()
   (
-    LOOKAHEAD(1) 
-    (t="+"|t="-") { opType = t.kind; } e2=MultiplicativeExpression() 
+    LOOKAHEAD(1)
+    (t="+"|t="-") { opType = t.kind; } e2=MultiplicativeExpression()
     { e1 = (opType==PLUS) ? new Plus(e1, e2) : new Minus(e1, e2); }
   )*
 
@@ -403,8 +403,8 @@ Exp AdditiveExpression():
 Exp MultiplicativeExpression():
 { Exp e1, e2; }
 {
-  e1=NotExpression() 
-  ( 
+  e1=NotExpression()
+  (
     LOOKAHEAD(1)
     "*" e2=NotExpression() { e1 = new Times(e1, e2); }
   )*
@@ -432,7 +432,7 @@ Exp PrimaryExpressionWithSuffix():
 }
 
 Exp ArrayLookup(Exp e) :
-{ Exp e2; } 
+{ Exp e2; }
 {
   "[" e2=Expression() "]"
   { return new ArrayLookup(e,e2); }
@@ -444,10 +444,10 @@ Exp ArrayLength(Exp e) : { }
   { return new ArrayLength(e); }
 }
 
-Exp MessageSend(Exp e) : 
-{ 
+Exp MessageSend(Exp e) :
+{
   Identifier i;
-  ExpList el = new ExpList(); 
+  ExpList el = new ExpList();
 }
 {
   "." i=Identifier() "(" ( el=ExpressionList() )? ")"
@@ -460,7 +460,7 @@ ExpList ExpressionList() :
   ExpList el = new ExpList();
 }
 {
-  e1=Expression() 
+  e1=Expression()
   { el.addElement(e1); }
   ( e2=ExpressionRest() { el.addElement(e2); })*
   { return el; }
@@ -475,7 +475,7 @@ Exp ExpressionRest() :
 
 Exp PrimaryExpression() :
 { Exp e; }
-{ 
+{
   (
   e=IntegerLiteral()
 |
@@ -491,7 +491,7 @@ Exp PrimaryExpression() :
   e=ArrayAllocationExpression()
 |
   e=AllocationExpression()
-|   
+|
   "(" e=Expression() ")"
   )
   { return e; }
@@ -555,7 +555,7 @@ Exp NotExpression() :
    "!" e=NotExpression()
   { e = new Not(e); }
  |
-   e=PrimaryExpressionWithSuffix() 
+   e=PrimaryExpressionWithSuffix()
   )
   { return e; }
 }

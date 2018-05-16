@@ -12,7 +12,7 @@ public class DepthFirstVisitor implements Visitor {
         n.cl.elementAt(i).accept(this);
     }
   }
-  
+
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
@@ -23,7 +23,7 @@ public class DepthFirstVisitor implements Visitor {
     }
     n.s.accept(this);
   }
-  
+
   // Identifier i;
   // VarDeclList vl;
   // MethodDeclList ml;
@@ -36,7 +36,7 @@ public class DepthFirstVisitor implements Visitor {
         n.ml.elementAt(i).accept(this);
     }
   }
- 
+
   // Identifier i;
   // Identifier j;
   // VarDeclList vl;
@@ -126,7 +126,7 @@ public class DepthFirstVisitor implements Visitor {
   public void visit(Print n) {
     n.e.accept(this);
   }
-  
+
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {

@@ -7,7 +7,7 @@ public class Assign extends Statement {
   public Exp e;
 
   public Assign(Identifier ai, Exp ae) {
-    i=ai; e=ae; 
+    i=ai; e=ae;
   }
 
   public void accept(Visitor v) {

@@ -13,7 +13,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     }
     return null;
   }
-  
+
   // Identifier i1,i2;
   // Statement s;
   public Type visit(MainClass n) {
@@ -25,7 +25,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     n.s.accept(this);
     return null;
   }
-  
+
   // Identifier i;
   // VarDeclList vl;
   // MethodDeclList ml;
@@ -39,7 +39,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     }
     return null;
   }
- 
+
   // Identifier i;
   // Identifier j;
   // VarDeclList vl;
@@ -141,7 +141,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     n.e.accept(this);
     return null;
   }
-  
+
   // Identifier i;
   // Exp e;
   public Type visit(Assign n) {
