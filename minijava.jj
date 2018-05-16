@@ -1,0 +1,569 @@
+options {
+  JAVA_UNICODE_ESCAPE = true;
+}
+
+PARSER_BEGIN(MiniJavaParser)
+package myparser;
+
+  import syntaxtree.*;
+  public class MiniJavaParser {}
+PARSER_END(MiniJavaParser)
+
+SKIP : /* WHITE SPACE */
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+SPECIAL_TOKEN : /* COMMENTS */
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN : 
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LSQPAREN: "[" >
+| < RSQPAREN: "]" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < SEMICOLON: ";" >
+| < DOT: "." >
+| < ASSIGN: "=" >
+| < LT: "<" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < AND : "&" >   
+| < NOT : "!" >   
+| < BOOLEAN: "boolean" >   
+| < CLASS: "class" >
+| < INTERFACE: "interface" >
+| < ELSE: "else" >
+| < EXTENDS: "extends" >
+| < FALSE: "false" >
+| < IF: "if" >
+| < WHILE: "while" >
+| < INTEGER: "int" >   
+| < LENGTH: "length" >
+| < MAIN: "main" >
+| < NEW: "new" >
+| < PUBLIC: "public" >
+| < RETURN: "return" >
+| < STATIC: "static" >
+| < STRING: "String" >
+| < THIS: "this" >
+| < TRUE: "true" >
+| < PRINT: "System.out.println" >
+| < VOID: "void" >         
+}
+
+TOKEN : /* LITERALS */
+{
+  < INTEGER_LITERAL: ( ["1"-"9"] (["0"-"9"])* | "0" ) >
+}
+
+TOKEN : /* IDENTIFIERS */
+{
+  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+|
+  < #LETTER:
+      [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+
+/************************************
+ * The MiniJava Grammar Starts Here *
+ ************************************/
+
+
+Program Goal() :
+{ MainClass m; 
+  ClassDeclList cl = new ClassDeclList();
+  ClassDecl c;
+}
+{
+  m=MainClass() 
+  ( c=ClassDeclaration() { cl.addElement(c); } )*
+  <EOF>
+  { return new Program(m,cl); }
+}
+
+MainClass MainClass() :
+{ Identifier i1,i2;
+  VarDecl v;
+  VarDeclList vl = new VarDeclList();
+  Statement s; }
+{
+  "class" i1=Identifier() "{"
+    "public" "static" "void" "main" "(" "String" "[" "]" i2=Identifier() ")"   
+    "{" 
+       ( LOOKAHEAD(2) v=VarDeclaration()    { vl.addElement(v); } )* 
+       s=Statement() 
+     "}"
+  "}"
+  { return new MainClass(i1,i2, vl, s); }
+}
+
+ClassDecl ClassDeclaration() :  
+{ ClassDecl c; }
+{
+  ( 
+  LOOKAHEAD(3)
+  c=ClassDeclarationSimple()
+|
+  c=ClassDeclarationExtends()
+  )
+  { return c; }
+}
+
+ClassDecl ClassDeclarationSimple() :
+{ Identifier i;
+  VarDecl v;
+  VarDeclList vl = new VarDeclList();
+  MethodDecl m;
+  MethodDeclList ml = new MethodDeclList();
+}
+{
+  "class" i=Identifier() "{" ( v=VarDeclaration()    { vl.addElement(v); } )* 
+                             ( m=MethodDeclaration() { ml.addElement(m); } )* 
+                       "}"
+  { return new ClassDeclSimple(i,vl,ml); }
+}
+
+ClassDecl ClassDeclarationExtends() :
+{ Identifier i1,i2;
+  VarDecl v;
+  VarDeclList vl = new VarDeclList();
+  MethodDecl m;
+  MethodDeclList ml = new MethodDeclList();
+}
+{
+  "class" i1=Identifier() "extends" i2=Identifier()
+                       "{"   ( v=VarDeclaration()    { vl.addElement(v); } )* 
+                             ( m=MethodDeclaration() { ml.addElement(m); } )* 
+                       "}"
+  { return new ClassDeclExtends(i1,i2,vl,ml); }
+}
+
+VarDecl VarDeclaration() :  
+{ Type t;
+  Identifier i;
+}
+{ 
+  t=Type() i=Identifier() ";"      
+  { return new VarDecl(t,i); }
+}
+
+MethodDecl MethodDeclaration() :  
+{ 
+  Type t;
+  Identifier i;
+  FormalList fl = new FormalList();
+  VarDecl v;
+  VarDeclList vl = new VarDeclList();
+  Statement s;
+  StatementList sl = new StatementList();
+  Exp e; 
+}
+{
+  "public" t=Type() i=Identifier() 
+  "(" ( fl=FormalParameterList() )? ")"   
+  "{" ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )* 
+      ( s=Statement() { sl.addElement(s); } )* "return" e=Expression() ";" "}"
+  { return new MethodDecl(t,i,fl,vl,sl,e); }
+}
+
+FormalList FormalParameterList() :
+{ FormalList fl = new FormalList(); 
+  Formal f;
+}
+{
+  f=FormalParameter() { fl.addElement(f); }
+  ( f=FormalParameterRest() { fl.addElement(f); } )*
+  { return fl; }
+}
+
+Formal FormalParameter() :
+{ Type t; 
+  Identifier i;
+}
+{
+  t=Type() i=Identifier()
+  { return new Formal(t,i); }
+}
+
+Formal FormalParameterRest() :
+{ Formal f; }
+{
+  "," f=FormalParameter()
+  { return f; }
+}
+
+Type Type() :
+{ Type t; }
+{
+  (
+  LOOKAHEAD(3)
+  t=ArrayType()
+|
+  t=BooleanType()
+|
+  t=IntegerType()
+|
+  t=IdentifierType()     
+  )
+  { return t; }
+}
+
+Type ArrayType() :
+{}
+{
+  "int" "[" "]"
+  { return new IntArrayType(); }
+}
+
+Type BooleanType() :
+{}
+{
+  "boolean"
+  { return new BooleanType(); }
+}
+
+Type IntegerType() :
+{}
+{
+  "int"
+  { return new IntegerType(); }
+}
+
+Type IdentifierType() :
+{ Token t; }
+{
+  t=<IDENTIFIER>
+  { return new IdentifierType(t.image); }
+}
+
+Statement Statement() :
+{ Statement s; }
+{
+  (
+  s=Block()
+| 
+  LOOKAHEAD(2)
+  s=AssignmentStatement()
+|
+  LOOKAHEAD(2)
+  s=ArrayAssignmentStatement()
+|
+  s=IfStatement()
+|
+  s=WhileStatement()
+|
+  s=PrintStatement()
+  )
+  { return s; }
+}
+
+Statement Block() :
+{ 
+  Statement s;
+  StatementList sl = new StatementList(); 
+}
+{
+  "{" ( s=Statement() { sl.addElement(s); } )* "}"
+  { return new Block(sl); }
+}
+
+Statement AssignmentStatement() :
+{ Identifier i;
+  Exp e; 
+}
+{
+  i=Identifier() "=" e=Expression() ";"
+  { return new Assign(i,e); }
+}
+
+Statement ArrayAssignmentStatement() :
+{ Identifier i;
+  Exp e1,e2;
+}
+{
+  i=Identifier() "[" e1=Expression() "]" "=" e2=Expression() ";"
+  { return new ArrayAssign(i,e1,e2); }
+}
+
+Statement IfStatement() :
+{ Exp e;
+  Statement s1,s2;
+}
+{
+  "if" "(" e=Expression() ")" s1=Statement() "else" s2=Statement() 
+  { return new If(e,s1,s2); }
+}
+
+Statement WhileStatement() :
+{ Exp e;
+  Statement s;
+}
+{
+  "while" "(" e=Expression() ")" s=Statement() 
+  { return new While(e,s); }
+}
+
+Statement PrintStatement() :
+{ Exp e; }
+{
+  "System.out.println" "(" e=Expression() ")" ";"
+  { return new Print(e); }
+}
+
+Exp Expression() :
+{ Exp e; }
+{
+  e=ConditionalAndExpression()
+  { return e; }
+}
+
+Exp ConditionalAndExpression():
+{ Exp e1, e2; }
+{
+  e1=RelationalExpression() 
+  ( LOOKAHEAD(1) "&&" e2=RelationalExpression() { e1 = new And(e1, e2); } )*
+  { return e1; }
+}
+
+Exp RelationalExpression():
+{ Exp e1, e2; }
+{
+  e1=AdditiveExpression() 
+  (
+    LOOKAHEAD(1) "<" e2=AdditiveExpression() { e1 = new LessThan(e1, e2); } 
+  )*
+  { return e1; }
+}
+
+Exp AdditiveExpression():
+{ Exp e1, e2; 
+  int opType;
+  Token t;
+}
+{
+
+  e1=MultiplicativeExpression() 
+  (
+    LOOKAHEAD(1) 
+    (t="+"|t="-") { opType = t.kind; } e2=MultiplicativeExpression() 
+    { e1 = (opType==PLUS) ? new Plus(e1, e2) : new Minus(e1, e2); }
+  )*
+
+  { return e1; }
+}
+
+Exp MultiplicativeExpression():
+{ Exp e1, e2; }
+{
+  e1=NotExpression() 
+  ( 
+    LOOKAHEAD(1)
+    "*" e2=NotExpression() { e1 = new Times(e1, e2); }
+  )*
+
+  { return e1; }
+}
+
+Exp PrimaryExpressionWithSuffix():
+{ Exp e; }
+{
+  e=PrimaryExpression()
+
+  (
+  LOOKAHEAD( "[" )
+  e=ArrayLookup(e)
+|
+  LOOKAHEAD( "." "length" )
+  e=ArrayLength(e)
+|
+  LOOKAHEAD( "." Identifier() "(" )
+  e=MessageSend(e)
+  )*
+
+  { return e; }
+}
+
+Exp ArrayLookup(Exp e) :
+{ Exp e2; } 
+{
+  "[" e2=Expression() "]"
+  { return new ArrayLookup(e,e2); }
+}
+
+Exp ArrayLength(Exp e) : { }
+{
+  "." "length"
+  { return new ArrayLength(e); }
+}
+
+Exp MessageSend(Exp e) : 
+{ 
+  Identifier i;
+  ExpList el = new ExpList(); 
+}
+{
+  "." i=Identifier() "(" ( el=ExpressionList() )? ")"
+  { return new Call(e,i,el); }
+}
+
+
+ExpList ExpressionList() :
+{ Exp e1,e2;
+  ExpList el = new ExpList();
+}
+{
+  e1=Expression() 
+  { el.addElement(e1); }
+  ( e2=ExpressionRest() { el.addElement(e2); })*
+  { return el; }
+}
+
+Exp ExpressionRest() :
+{ Exp e; }
+{
+  "," e=Expression()
+  { return e; }
+}
+
+Exp PrimaryExpression() :
+{ Exp e; }
+{ 
+  (
+  e=IntegerLiteral()
+|
+  e=TrueLiteral()
+|
+  e=FalseLiteral()
+|
+  e=IdentifierExp()
+|
+  e=ThisExpression()
+|
+  LOOKAHEAD(3)
+  e=ArrayAllocationExpression()
+|
+  e=AllocationExpression()
+|   
+  "(" e=Expression() ")"
+  )
+  { return e; }
+}
+
+Exp IntegerLiteral() :
+{ Token t; }
+{
+  t=<INTEGER_LITERAL>
+  { return new IntegerLiteral(Integer.parseInt(t.image)); }
+}
+
+
+Exp TrueLiteral() :
+{}
+{
+  "true"
+  { return new True(); }
+}
+
+Exp FalseLiteral() :
+{}
+{
+  "false"
+  { return new False(); }
+}
+
+Exp IdentifierExp() :
+{ Token t; }
+{
+  t=<IDENTIFIER>
+  { return new IdentifierExp(t.image); }
+}
+
+Exp ThisExpression() :
+{}
+{
+  "this"
+  { return new This(); }
+}
+
+Exp ArrayAllocationExpression() :
+{ Exp e; }
+{
+  "new" "int" "[" e=Expression() "]"
+  { return new NewArray(e); }
+}
+
+Exp AllocationExpression() :
+{ Identifier i; }
+{
+  "new" i=Identifier() "(" ")"
+  { return new NewObject(i); }
+}
+
+Exp NotExpression() :
+{ Exp e; }
+{
+  (
+   LOOKAHEAD(1)
+   "!" e=NotExpression()
+  { e = new Not(e); }
+ |
+   e=PrimaryExpressionWithSuffix() 
+  )
+  { return e; }
+}
+
+Identifier Identifier() :
+{ Token t; }
+{
+  t=<IDENTIFIER>
+  { return new Identifier(t.image); }
+}
+
