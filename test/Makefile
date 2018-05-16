@@ -23,6 +23,3 @@ check: test$(A).class
 	$(MARS) test$(A).asm > out_mips$(A).txt
 	java test$(A) > out_java$(A).txt
 	diff -B out_mips$(A).txt out_java$(A).txt
-
-
-
