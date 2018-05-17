@@ -147,6 +147,11 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print(n.s);
   }
 
+  // String s;
+  public void visit(InstanceType n) {
+    System.out.print(n.s);
+  }
+
   // StatementList sl;
   public void visit(Block n) {
     System.out.println("{ ");
