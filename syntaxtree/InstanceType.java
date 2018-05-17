@@ -5,7 +5,7 @@ import visitor.TypeVisitor;
 public class InstanceType extends Type {
   public String s;
 
-  public InstanceType(String as) { 
+  public InstanceType(String as) {
     s=as;
   }
 
