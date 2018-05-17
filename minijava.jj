@@ -131,16 +131,17 @@ Program Goal() :
 
 MainClass MainClass() :
 {
-  Identifier i1, i2;
+  IdentifierType i1;
+  Identifier i2;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
   Statement s;
 }
 {
-  <CLASS> i1=Identifier()
+  <CLASS> i1=IdentifierType()
       <LBRACE>
       <PUBLIC> <STATIC> <VOID> <MAIN>
-      <LPAREN> <STRING> <LSQPAREN> <RSQPAREN> i2 = Identifier() <RPAREN> <LBRACE>
+      <LPAREN> <STRING> <LSQPAREN> <RSQPAREN> i2=Identifier() <RPAREN> <LBRACE>
       (LOOKAHEAD(2) v=VarDeclaration() {vl.addElement(v);})*
       s=Statement()
       <RBRACE>
@@ -161,14 +162,14 @@ ClassDecl ClassDeclaration() :
 
 ClassDecl ClassDeclarationSimple() :
 {
-  Identifier i;
+  IdentifierType i;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
   MethodDecl m;
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  <CLASS> i=Identifier()
+  <CLASS> i=IdentifierType()
       <LBRACE>
       (v=VarDeclaration() {vl.addElement(v);})*
       (m=MethodDeclaration() {ml.addElement(m);})*
@@ -178,14 +179,14 @@ ClassDecl ClassDeclarationSimple() :
 
 ClassDecl ClassDeclarationExtends() :
 {
-  Identifier i1, i2;
+  IdentifierType i1, i2;
   VarDecl v;
   VarDeclList vl = new VarDeclList();
   MethodDecl m;
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  <CLASS> i1=Identifier() <EXTENDS> i2=Identifier()
+  <CLASS> i1=IdentifierType() <EXTENDS> i2=IdentifierType()
       <LBRACE>
       (v=VarDeclaration() {vl.addElement(v);})*
       (m=MethodDeclaration() {ml.addElement(m);})*
@@ -287,7 +288,7 @@ Type IntegerType() :
   {return new IntegerType();}
 }
 
-Type IdentifierType() :
+IdentifierType IdentifierType() :
 {Token t;}
 {
   t=<IDENTIFIER>
@@ -370,211 +371,100 @@ Statement PrintStatement() :
 }
 
 Exp Expression() :
+{Exp e1, e2;}
+{
+  e1=ExpressionF()
+  (<AND> e2=ExpressionF() {e1 = new And(e1, e2);})*
+  {return e1;}
+}
+
+Exp ExpressionF() :
+{Exp e1, e2;}
+{
+  e1=ExpressionE()
+  (<LT> e2=ExpressionE() {e1 = new LessThan(e1, e2);})*
+  {return e1;}
+}
+
+
+Exp ExpressionE() :
+{Exp e1, e2;}
+{
+  e1=ExpressionC()
+  (
+  <PLUS> e2=ExpressionC() {e1 = new Plus(e1, e2);}
+| <MINUS> e2=ExpressionC() {e1 = new Minus(e1, e2);}
+  )*
+  {return e1;}
+}
+
+Exp ExpressionC() :
+{Exp e1, e2;}
+{
+  e1=ExpressionB()
+  (<TIME> e2=ExpressionB() {e1 = new Times(e1, e2);})*
+  {return e1;}
+}
+
+Exp ExpressionB() :
 {Exp e;}
 {
-  e=ConditionalAndExpression()
-  { return e; }
-}
-
-Exp ConditionalAndExpression():
-{ Exp e1, e2; }
-{
-  e1=RelationalExpression()
-  ( LOOKAHEAD(1) "&&" e2=RelationalExpression() { e1 = new And(e1, e2); } )*
-  { return e1; }
-}
-
-Exp RelationalExpression():
-{ Exp e1, e2; }
-{
-  e1=AdditiveExpression()
   (
-    LOOKAHEAD(1) "<" e2=AdditiveExpression() { e1 = new LessThan(e1, e2); }
-  )*
-  { return e1; }
+  <NOT> e=ExpressionB() {e = new Not(e);}
+| e=ExpressionA()
+  )
+  {return e;}
 }
 
-Exp AdditiveExpression():
-{ Exp e1, e2;
-  int opType;
-  Token t;
-}
+
+Exp ExpressionA() :
 {
-
-  e1=MultiplicativeExpression()
-  (
-    LOOKAHEAD(1)
-    (t="+"|t="-") { opType = t.kind; } e2=MultiplicativeExpression()
-    { e1 = (opType==PLUS) ? new Plus(e1, e2) : new Minus(e1, e2); }
-  )*
-
-  { return e1; }
-}
-
-Exp MultiplicativeExpression():
-{ Exp e1, e2; }
-{
-  e1=NotExpression()
-  (
-    LOOKAHEAD(1)
-    "*" e2=NotExpression() { e1 = new Times(e1, e2); }
-  )*
-
-  { return e1; }
-}
-
-Exp PrimaryExpressionWithSuffix():
-{ Exp e; }
-{
-  e=PrimaryExpression()
-
-  (
-  LOOKAHEAD( "[" )
-  e=ArrayLookup(e)
-|
-  LOOKAHEAD( "." "length" )
-  e=ArrayLength(e)
-|
-  LOOKAHEAD( "." Identifier() "(" )
-  e=MessageSend(e)
-  )*
-
-  { return e; }
-}
-
-Exp ArrayLookup(Exp e) :
-{ Exp e2; }
-{
-  "[" e2=Expression() "]"
-  { return new ArrayLookup(e,e2); }
-}
-
-Exp ArrayLength(Exp e) : { }
-{
-  "." "length"
-  { return new ArrayLength(e); }
-}
-
-Exp MessageSend(Exp e) :
-{
+  Exp e1, e2;
   Identifier i;
-  ExpList el = new ExpList();
+  ExpList e3 = new ExpList();
 }
 {
-  "." i=Identifier() "(" ( el=ExpressionList() )? ")"
-  { return new Call(e,i,el); }
-}
-
-
-ExpList ExpressionList() :
-{ Exp e1,e2;
-  ExpList el = new ExpList();
-}
-{
-  e1=Expression()
-  { el.addElement(e1); }
-  ( e2=ExpressionRest() { el.addElement(e2); })*
-  { return el; }
-}
-
-Exp ExpressionRest() :
-{ Exp e; }
-{
-  "," e=Expression()
-  { return e; }
+  e1=PrimaryExpression()
+  (
+  <LSQPAREN> e2=Expression() <RSQPAREN> {e1 = new ArrayLookup(e1, e2);}
+| LOOKAHEAD(3)
+  <DOT> i=Identifier()
+      <LPAREN>
+      (
+      e2=Expression() {e3.addElement(e2);}
+      (<COMMA> e2=Expression() {e3.addElement(e2);})*
+      )?
+      <RPAREN>
+  {e1 = new Call(e1, i, e3);}
+| <DOT> <LENGTH> {e1 = new ArrayLength(e1);}
+  )*
+  {return e1;}
 }
 
 Exp PrimaryExpression() :
-{ Exp e; }
+{
+  Exp e;
+  Token t;
+  IdentifierType i;
+}
 {
   (
-  e=IntegerLiteral()
-|
-  e=TrueLiteral()
-|
-  e=FalseLiteral()
-|
-  e=IdentifierExp()
-|
-  e=ThisExpression()
-|
-  LOOKAHEAD(3)
-  e=ArrayAllocationExpression()
-|
-  e=AllocationExpression()
-|
-  "(" e=Expression() ")"
+  t=<INTEGER_LITERAL> {e = new IntegerLiteral(Integer.decode(t.image));}
+| <TRUE> {e = new True();}
+| <FALSE> {e = new False();}
+| t=<IDENTIFIER> {e = new IdentifierExp(t.image);}
+| <THIS> {e = new This();}
+| LOOKAHEAD(3)
+  <NEW> <INTEGER> <LSQPAREN> e=Expression() <RSQPAREN> {e = new NewArray(e);}
+| <NEW> i=IdentifierType() <LPAREN> <RPAREN> {e = new NewObject(i);}
+| <LPAREN> e=Expression() <RPAREN>
   )
-  { return e; }
-}
-
-Exp IntegerLiteral() :
-{ Token t; }
-{
-  t=<INTEGER_LITERAL>
-  { return new IntegerLiteral(Integer.parseInt(t.image)); }
-}
-
-
-Exp TrueLiteral() :
-{}
-{
-  "true"
-  { return new True(); }
-}
-
-Exp FalseLiteral() :
-{}
-{
-  "false"
-  { return new False(); }
-}
-
-Exp IdentifierExp() :
-{ Token t; }
-{
-  t=<IDENTIFIER>
-  { return new IdentifierExp(t.image); }
-}
-
-Exp ThisExpression() :
-{}
-{
-  "this"
-  { return new This(); }
-}
-
-Exp ArrayAllocationExpression() :
-{ Exp e; }
-{
-  "new" "int" "[" e=Expression() "]"
-  { return new NewArray(e); }
-}
-
-Exp AllocationExpression() :
-{ Identifier i; }
-{
-  "new" i=Identifier() "(" ")"
-  { return new NewObject(i); }
-}
-
-Exp NotExpression() :
-{ Exp e; }
-{
-  (
-   LOOKAHEAD(1)
-   "!" e=NotExpression()
-  { e = new Not(e); }
- |
-   e=PrimaryExpressionWithSuffix()
-  )
-  { return e; }
+  {return e;}
 }
 
 Identifier Identifier() :
-{ Token t; }
+{Token t;}
 {
   t=<IDENTIFIER>
-  { return new Identifier(t.image); }
+  {return new Identifier(t.image);}
 }
-
