@@ -3,11 +3,12 @@ import visitor.Visitor;
 import visitor.TypeVisitor;
 
 public class MainClass {
-  public Identifier i1,i2;
+  public IdentifierType i1;
+  public Identifier i2;
   public VarDeclList vl;
   public Statement s;
 
-  public MainClass(Identifier ai1, Identifier ai2, VarDeclList vl, Statement as) {
+  public MainClass(IdentifierType ai1, Identifier ai2, VarDeclList vl, Statement as) {
     i1=ai1; i2=ai2; s=as;
     this.vl = vl;
   }

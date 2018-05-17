@@ -9,12 +9,12 @@ import visitor.TypeVisitor;
    }
 */
 public class ClassDeclExtends extends ClassDecl {
-  public Identifier i;
-  public Identifier j;
+  public IdentifierType i;
+  public IdentifierType j;
   public VarDeclList vl;      // Sequence of variable declarations
   public MethodDeclList ml;   // Sequence of method declarations
 
-  public ClassDeclExtends(Identifier ai, Identifier aj,
+  public ClassDeclExtends(IdentifierType ai, IdentifierType aj,
                   VarDeclList avl, MethodDeclList aml) {
     i=ai; j=aj; vl=avl; ml=aml;
   }

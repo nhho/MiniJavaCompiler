@@ -3,9 +3,9 @@ import visitor.Visitor;
 import visitor.TypeVisitor;
 
 public class NewObject extends Exp {
-  public Identifier i;
+  public IdentifierType i;
 
-  public NewObject(Identifier ai) {
+  public NewObject(IdentifierType ai) {
     i=ai;
   }
 
