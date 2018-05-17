@@ -138,7 +138,7 @@ public class TypeCheckVisitor extends DepthFirstVisitor {
   public void visit(Print n) {
     Type t1 = n.e.accept(new TypeCheckExpVisitor());
     if (!(t1 instanceof IntegerType)) {
-      System.out.println("The argument of System.out.println must be of type int");
+      System.out.println("the argument of System.out.println must be of type int");
       System.exit(-1);
     }
   }
