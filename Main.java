@@ -17,9 +17,9 @@ public class Main {
       root.accept(typeCheck);
 
       PrintWriter out = new PrintWriter(System.out);
-      if (args.length >= 1) {
+      /* if (args.length >= 1) {
         out = new PrintWriter(new BufferedWriter(new FileWriter(args[0])));
-      }
+      } */
 
       CodeGenVisitor cgen = new CodeGenVisitor(buildSymTab.getSymTab(), out);
 
@@ -28,8 +28,8 @@ public class Main {
       out.close();
     } catch (ParseException e) {
       System.out.println(e.toString());
-    } catch (IOException e) {
+    } /* catch (IOException e) {
       System.out.println(e.toString());
-    }
+    } */
   }
 }
