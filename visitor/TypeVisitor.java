@@ -14,6 +14,7 @@ public interface TypeVisitor {
   public Type visit(BooleanType n);
   public Type visit(IntegerType n);
   public Type visit(IdentifierType n);
+  public Type visit(InstanceType n);
   public Type visit(Block n);
   public Type visit(If n);
   public Type visit(While n);

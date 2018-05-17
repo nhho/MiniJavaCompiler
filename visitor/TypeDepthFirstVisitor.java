@@ -111,6 +111,11 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     return null;
   }
 
+  // String s;
+  public Type visit(InstanceType n) {
+    return null;
+  }
+
   // StatementList sl;
   public Type visit(Block n) {
     for ( int i = 0; i < n.sl.size(); i++ ) {

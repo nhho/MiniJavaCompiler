@@ -100,6 +100,10 @@ public class DepthFirstVisitor implements Visitor {
   public void visit(IdentifierType n) {
   }
 
+  // String s;
+  public void visit(InstanceType n) {
+  }
+
   // StatementList sl;
   public void visit(Block n) {
     for ( int i = 0; i < n.sl.size(); i++ ) {
