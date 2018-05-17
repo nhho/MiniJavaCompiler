@@ -218,10 +218,10 @@ MethodDecl MethodDeclaration() :
   <PUBLIC> t=Type() i=Identifier()
       <LPAREN> (fl=FormalParameterList())? <RPAREN>
       <LBRACE>
-	  (LOOKAHEAD(2) v=VarDeclaration() {vl.addElement(v);})*
+      (LOOKAHEAD(2) v=VarDeclaration() {vl.addElement(v);})*
       (s=Statement() {sl.addElement(s);})*
-	  <RETURN> e=Expression() <SEMICOLON>
-	  <RBRACE>
+      <RETURN> e=Expression() <SEMICOLON>
+      <RBRACE>
   {return new MethodDecl(t, i, fl, vl, sl, e);}
 }
 
