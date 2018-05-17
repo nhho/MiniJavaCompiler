@@ -6,6 +6,14 @@
   1. 'input_file' is a semantically valid MiniJava Variant source program
     MiniJava Variant: (VarDeclaration)* is added at the begining of 'main' in MainClass
     source: p-asgn4(1).docx
+  2. MainClass will not have new instance or be a superclass of some class
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=130
+  3. 'main' in MainClass will not be called except the initial one
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=130
+  4. 'main'(except the only method in MainClass), 'length', 'String' cannot be used as identifier even though they are allowed in Java
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=130
+  5. some keywords in Java are not considered as reserved if they have no specific meaning here (e.g. 'protected', 'interface', 'double')
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=130
 
 [C. Tests]
   Describe which cases (1-15, 16) your program can and cannot handles.
