@@ -373,21 +373,21 @@ Statement PrintStatement() :
 Exp Expression() :
 {Exp e1, e2;}
 {
-  e1=ExpressionF()
-  (<AND> e2=ExpressionF() {e1 = new And(e1, e2);})*
-  {return e1;}
-}
-
-Exp ExpressionF() :
-{Exp e1, e2;}
-{
   e1=ExpressionE()
-  (<LT> e2=ExpressionE() {e1 = new LessThan(e1, e2);})*
+  (<AND> e2=ExpressionE() {e1 = new And(e1, e2);})*
   {return e1;}
 }
-
 
 Exp ExpressionE() :
+{Exp e1, e2;}
+{
+  e1=ExpressionD()
+  (<LT> e2=ExpressionD() {e1 = new LessThan(e1, e2);})*
+  {return e1;}
+}
+
+
+Exp ExpressionD() :
 {Exp e1, e2;}
 {
   e1=ExpressionC()
