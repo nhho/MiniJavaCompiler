@@ -221,6 +221,27 @@ class Class {
     return null;
   }
 
+  public Method getMethod2(String qid, Vector<Type> vt) {
+    Class tmp = this;
+    while (true) {
+      Method m = tmp.getMethod(qid);
+      if (m != null) {
+        if (!m.compatible(vt)) {
+          System.out.println("cannot resolve method " + qid + " due to type conflict");
+          System.exit(-1);
+        }
+        return m;
+      }
+      if (tmp.parent == null) {
+        break;
+      }
+      tmp = st.getClass(tmp.parent);
+    }
+    System.out.println("cannot resolve method " + qid);
+    System.exit(-1);
+    return null;
+  }
+
   // Add a field
   // Return false if there is a name conflict (among all fields only)
   public boolean addVar(String id, Type type) {
@@ -294,8 +315,8 @@ class Method {
     vars = new Hashtable<String, Variable>();
   }
 
-  public boolean compatibility(String qid, Vector<Type> vt, SymbolTable st) {
-    if (!qid.equals(id) || vt.size() != params.size()) {
+  public boolean compatible(Vector<Type> vt, SymbolTable st) {
+    if (vt.size() != params.size()) {
       return false;
     }
     for (int i = 0; i < vt.size(); i++) {
