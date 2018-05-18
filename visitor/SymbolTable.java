@@ -226,7 +226,7 @@ class Class {
     while (true) {
       Method m = tmp.getMethod(qid);
       if (m != null) {
-        if (!m.compatible(vt)) {
+        if (!m.compatible(vt, st)) {
           System.out.println("cannot resolve method " + qid + " due to type conflict");
           System.exit(-1);
         }
