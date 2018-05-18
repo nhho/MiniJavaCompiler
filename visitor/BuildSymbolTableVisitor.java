@@ -385,7 +385,7 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   public Type visit(IdentifierExp n) {
     Variable tmp = symbolTable.getVar(currMethod, currClass, n.s);
     if (tmp == null) {
-      System.out.println(n.i.s + "is an unknown identifier");
+      System.out.println(n.s + "is an unknown identifier");
       System.exit(-1);
     }
     return tmp.type();
