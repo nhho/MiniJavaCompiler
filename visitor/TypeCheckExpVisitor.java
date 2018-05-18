@@ -1,5 +1,6 @@
 package visitor;
 
+import java.util.Vector;
 import syntaxtree.*;
 
 public class TypeCheckExpVisitor extends TypeDepthFirstVisitor {
@@ -131,7 +132,7 @@ public class TypeCheckExpVisitor extends TypeDepthFirstVisitor {
 
     String cname = t1.toString();
     Class tmp = TypeCheckVisitor.symbolTable.getClass(cname);
-    Method m = tmp.getMethod2(mname, vt, n.i.line, n.i.column);
+    Method m = tmp.getMethod2(mname, vt);
     return m.type.instance();
   }
 
@@ -150,8 +151,10 @@ public class TypeCheckExpVisitor extends TypeDepthFirstVisitor {
 
   // String s;
   public Type visit(IdentifierExp n) {
-    return TypeCheckVisitor.symbolTable.getVarType(TypeCheckVisitor.currMethod,
-        TypeCheckVisitor.currClass, n.s);
+    // return TypeCheckVisitor.symbolTable.getVarType(TypeCheckVisitor.currMethod,
+    // TypeCheckVisitor.currClass, n.s);
+    return TypeCheckVisitor.symbolTable.getVar(TypeCheckVisitor.currMethod,
+        TypeCheckVisitor.currClass, n.s).type.instance();
   }
 
   public Type visit(This n) {
