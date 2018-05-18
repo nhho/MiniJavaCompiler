@@ -14,6 +14,8 @@
     source: https://piazza.com/class/jb23yysuffr2fx?cid=130
   5. some keywords in Java are not considered as reserved if they have no specific meaning here (e.g. 'protected', 'interface', 'double')
     source: https://piazza.com/class/jb23yysuffr2fx?cid=130
+  6. local variables will be initialized before using
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=132
 
 [C. Tests]
   Describe which cases (1-15, 16) your program can and cannot handles.
