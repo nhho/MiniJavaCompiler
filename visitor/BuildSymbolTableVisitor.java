@@ -186,15 +186,16 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
     String id = n.i.toString();
 
     // Entering a method scope
-    currMethod = currClass.getMethod(id);
-
-    for (int i = 0; i < n.fl.size(); i++) {
-      n.fl.elementAt(i).accept(this);
-    }
 
     if (!currClass.addMethod(id, t)) {
       System.out.println("method " + id + " is already defined in " + currClass.id);
       System.exit(-1);
+    }
+
+    currMethod = currClass.getMethod(id);
+
+    for (int i = 0; i < n.fl.size(); i++) {
+      n.fl.elementAt(i).accept(this);
     }
 
     // n.idRef = currMethod.idRef;
