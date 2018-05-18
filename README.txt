@@ -16,6 +16,8 @@
     source: https://piazza.com/class/jb23yysuffr2fx?cid=130
   6. local variables will be initialized before using
     source: https://piazza.com/class/jb23yysuffr2fx?cid=132
+  7. short-circuit is not required in And operator
+    source: https://piazza.com/class/jb23yysuffr2fx?cid=113
 
 [C. Tests]
   Describe which cases (1-15, 16) your program can and cannot handles.
