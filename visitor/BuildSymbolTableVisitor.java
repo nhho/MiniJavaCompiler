@@ -116,8 +116,8 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
   // MethodDeclList ml; (Method declaration)
   public Type visit(ClassDeclExtends n) {
     if (state == 0) {
-      if (!symbolTable.addClass(n.i.s,  n.j.s)) {
-        System.out.println("class " +  n.i.s + " is already defined");
+      if (!symbolTable.addClass(n.i.s, n.j.s)) {
+        System.out.println("class " + n.i.s + " is already defined");
         System.exit(-1);
       }
     } else if (state == 1) {
