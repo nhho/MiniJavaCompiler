@@ -1,7 +1,7 @@
 package visitor;
 
-import syntaxtree.*;
 import java.io.PrintWriter;
+import syntaxtree.*;
 
 public class CodeGenVisitor extends DepthFirstVisitor {
 
@@ -20,25 +20,26 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   public void visit(Program n) {
     // Data segment
     out.println(
-      ".data\n" +
-      "newline: .asciiz \"\\n\"\n" +    // to be used by cgen for "System.out.println()"
-      "msg_index_out_of_bound_exception: .asciiz \"Index out of bound exception\\n\"\n" +
-      "msg_null_pointer_exception: .asciiz \"Null pointer exception\\n\"\n" +
-      "\n" +
-      ".text\n"
+        ".data\n" +
+        "newline: .asciiz \"\\n\"\n" +    // to be used by cgen for "System.out.println()"
+        "msg_index_out_of_bound_exception: .asciiz \"Index out of bound exception\\n\"\n" +
+        "msg_null_pointer_exception: .asciiz \"Null pointer exception\\n\"\n" +
+        "\n" +
+        ".text\n"
     );
 
     n.m.accept(this);
 
-    out.println(  // Code to terminate the program
-      "# exit\n" +
-      "li $v0, 10\n" +
-      "syscall\n"
+    // Code to terminate the program
+    out.println(
+        "# exit\n" +
+        "li $v0, 10\n" +
+        "syscall\n"
     );
 
     // Code for all methods
-    for ( int i = 0; i < n.cl.size(); i++ ) {
-        n.cl.elementAt(i).accept(this);
+    for (int i = 0; i < n.cl.size(); i++) {
+      n.cl.elementAt(i).accept(this);
     }
 
     // Code for some utility functions
@@ -166,7 +167,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   }
 
   // cgen: this
-  public void visit (This n) {
+  public void visit(This n) {
   }
 
   // int i;
@@ -189,56 +190,56 @@ public class CodeGenVisitor extends DepthFirstVisitor {
 
   void cgen_supporting_functions() {
     out.println(
-     "_print_int: # System.out.println(int)\n" +
-     "li $v0, 1\n" +
-     "syscall\n" +
-     "la $a0, newline\n" +
-     "li $a1, 1\n" +
-     "li $v0, 4   # print newline\n" +
-     "syscall\n" +
-     "jr $ra\n"
+        "_print_int: # System.out.println(int)\n" +
+        "li $v0, 1\n" +
+        "syscall\n" +
+        "la $a0, newline\n" +
+        "li $a1, 1\n" +
+        "li $v0, 4   # print newline\n" +
+        "syscall\n" +
+        "jr $ra\n"
     );
 
     out.println(
-      "_null_pointer_exception:\n" +
-      "la $a0, msg_null_pointer_exception\n" +
-      "li $a1, 23\n" +
-      "li $v0, 4\n" +
-      "syscall\n" +
-      "li $v0, 10\n" +
-      "syscall\n"
+        "_null_pointer_exception:\n" +
+        "la $a0, msg_null_pointer_exception\n" +
+        "li $a1, 23\n" +
+        "li $v0, 4\n" +
+        "syscall\n" +
+        "li $v0, 10\n" +
+        "syscall\n"
     );
 
     out.println(
-      "_array_index_out_of_bound_exception:\n" +
-      "la $a0, msg_index_out_of_bound_exception\n" +
-      "li $a1, 29\n" +
-      "li $v0, 4\n" +
-      "syscall\n" +
-      "li $v0, 10\n" +
-      "syscall\n"
+        "_array_index_out_of_bound_exception:\n" +
+        "la $a0, msg_index_out_of_bound_exception\n" +
+        "li $a1, 29\n" +
+        "li $v0, 4\n" +
+        "syscall\n" +
+        "li $v0, 10\n" +
+        "syscall\n"
     );
 
     out.println(
-      "_alloc_int_array: # new int [$a0]\n" +
-      "addi $a2, $a0, 0  # Save length in $a2\n" +
-      "addi $a0, $a0, 1  # One more word to store the length\n" +
-      "sll $a0, $a0, 2   # multiple by 4 bytes\n" +
-      "li $v0, 9         # allocate space\n" +
-      "syscall\n" +
-      "\n" +
-      "sw $a2, 0($v0)    # Store array length\n" +
-      "addi $t1, $v0, 4  # begin address = ($v0 + 4); address of the first element\n" +
-      "add $t2, $v0, $a0 # loop until ($v0 + 4*(length+1)), the address after the last element\n" +
-      "\n" +
-      "_alloc_int_array_loop:\n" +
-      "beq $t1, $t2, _alloc_int_array_loop_end\n" +
-      "sw $0, 0($t1)\n"+
-      "addi $t1, $t1, 4\n" +
-      "j _alloc_int_array_loop\n" +
-      "_alloc_int_array_loop_end:\n" +
-      "\n" +
-      "jr $ra\n"
+        "_alloc_int_array: # new int [$a0]\n" +
+        "addi $a2, $a0, 0  # Save length in $a2\n" +
+        "addi $a0, $a0, 1  # One more word to store the length\n" +
+        "sll $a0, $a0, 2   # multiple by 4 bytes\n" +
+        "li $v0, 9         # allocate space\n" +
+        "syscall\n" +
+        "\n" +
+        "sw $a2, 0($v0)    # Store array length\n" +
+        "addi $t1, $v0, 4  # begin address = ($v0 + 4); address of the first element\n" +
+        "add $t2, $v0, $a0 # loop until ($v0 + 4*(length+1)), the address after the last element\n" +
+        "\n" +
+        "_alloc_int_array_loop:\n" +
+        "beq $t1, $t2, _alloc_int_array_loop_end\n" +
+        "sw $0, 0($t1)\n" +
+        "addi $t1, $t1, 4\n" +
+        "j _alloc_int_array_loop\n" +
+        "_alloc_int_array_loop_end:\n" +
+        "\n" +
+        "jr $ra\n"
     );
   }
 }
