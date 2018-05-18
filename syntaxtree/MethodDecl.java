@@ -9,7 +9,7 @@ public class MethodDecl {
   public VarDeclList vl;
   public StatementList sl;
   public Exp e;
-  public int idRef;
+  // public int idRef;
 
   public MethodDecl(Type at, Identifier ai, FormalList afl, VarDeclList avl,
                     StatementList asl, Exp ae) {

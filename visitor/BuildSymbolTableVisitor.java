@@ -197,7 +197,7 @@ public class BuildSymbolTableVisitor extends TypeDepthFirstVisitor {
       System.exit(-1);
     }
 
-    n.idRef = currMethod.idRef;
+    // n.idRef = currMethod.idRef;
 
     for (int i = 0; i < n.vl.size(); i++) {
       n.vl.elementAt(i).accept(this);
