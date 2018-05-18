@@ -16,4 +16,12 @@ public class IdentifierType extends Type {
   public Type accept(TypeVisitor v) {
     return v.visit(this);
   }
+
+  public String toString() {
+    return s;
+  }
+
+  public InstanceType instance() {
+    return new InstanceType(s);
+  }
 }
