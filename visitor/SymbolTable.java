@@ -168,6 +168,7 @@ class Class {
   Type type; // An instance of Type that represents this class
   int idRef;
   boolean vis;
+  boolean gen;
   SymbolTable st;
 
   // Model a class named "id" that extend a class name "p"
@@ -181,6 +182,7 @@ class Class {
     Global.idRefCnt += 1;
     idRef = Global.idRefCnt;
     vis = false;
+    gen = false;
     st = stt;
   }
 
