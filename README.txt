@@ -1,6 +1,7 @@
 [A. Instructions]
   1. run 'make' to compile all necessary files
-  2. run 'java Main < input_file > output.asm'
+  2. run 'java Main < input_file > output.asm' for generating MIPS code
+  3. run 'make tests' for testing all tests
 
 [B. Assumptions]
   1. 'input_file' is a semantically valid MiniJava Variant source program
