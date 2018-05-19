@@ -394,14 +394,15 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     out.println("li $fp, " + n.el.size());
     out.println("sll $fp, $fp, 2");
     out.println("add $fp, $fp, $sp");
-    Class targetClass = symbolTable.getClass(currClass.id);
+    Class targetClass = symbolTable.getClass(n.cname);
     while (true) {
       if (targetClass.getMethod(n.i.s) != null) {
         out.println("jal _method_" + targetClass.id + "." + n.i.s);
         break;
       }
       if (targetClass.parent == null) {
-        break;
+        System.out.println("fail to resolve method " + n.cname + "." + n.i.s);
+        System.exit(-1);
       }
       targetClass = symbolTable.getClass(targetClass.parent);
     }

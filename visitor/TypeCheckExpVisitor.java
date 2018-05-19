@@ -131,6 +131,7 @@ public class TypeCheckExpVisitor extends TypeDepthFirstVisitor {
     }
 
     String cname = t1.toString();
+    n.cname = cname;
     Class tmp = TypeCheckVisitor.symbolTable.getClass(cname);
     Method m = tmp.getMethod2(mname, vt);
     return m.type.instance();
