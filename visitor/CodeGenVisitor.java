@@ -495,6 +495,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   // Exp e;
   // cgen: !e
   public void visit(Not n) {
+    n.e.accept(this);
     out.println("xor $a0, $a0, 1");
   }
 
