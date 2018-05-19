@@ -194,70 +194,70 @@ tests:
 	javac $(JAVAC_OPTIONS) test/input/BinarySearch.java
 	$(CODEGEN) < test/input/BinarySearch.java > test/input/BinarySearch.asm
 	$(MARS) test/input/BinarySearch.asm > test/input/BinarySearch_mips.txt
-	java -classpath test.input BinarySearch > test/input/BinarySearch_java.txt
+	java -classpath test/input BinarySearch > test/input/BinarySearch_java.txt
 	diff --strip-trailing-cr -B test/input/BinarySearch_mips.txt test/input/BinarySearch_java.txt
 	javac $(JAVAC_OPTIONS) test/input/BinaryTree.java
 	$(CODEGEN) < test/input/BinaryTree.java > test/input/BinaryTree.asm
 	$(MARS) test/input/BinaryTree.asm > test/input/BinaryTree_mips.txt
-	java -classpath test.input BinaryTree > test/input/BinaryTree_java.txt
+	java -classpath test/input BinaryTree > test/input/BinaryTree_java.txt
 	diff --strip-trailing-cr -B test/input/BinaryTree_mips.txt test/input/BinaryTree_java.txt
 	javac $(JAVAC_OPTIONS) test/input/BubbleSort.java
 	$(CODEGEN) < test/input/BubbleSort.java > test/input/BubbleSort.asm
 	$(MARS) test/input/BubbleSort.asm > test/input/BubbleSort_mips.txt
-	java -classpath test.input BubbleSort > test/input/BubbleSort_java.txt
+	java -classpath test/input BubbleSort > test/input/BubbleSort_java.txt
 	diff --strip-trailing-cr -B test/input/BubbleSort_mips.txt test/input/BubbleSort_java.txt
 	javac $(JAVAC_OPTIONS) test/input/Factorial.java
 	$(CODEGEN) < test/input/Factorial.java > test/input/Factorial.asm
 	$(MARS) test/input/Factorial.asm > test/input/Factorial_mips.txt
-	java -classpath test.input Factorial > test/input/Factorial_java.txt
+	java -classpath test/input Factorial > test/input/Factorial_java.txt
 	diff --strip-trailing-cr -B test/input/Factorial_mips.txt test/input/Factorial_java.txt
 	javac $(JAVAC_OPTIONS) test/input/LinearSearch.java
 	$(CODEGEN) < test/input/LinearSearch.java > test/input/LinearSearch.asm
 	$(MARS) test/input/LinearSearch.asm > test/input/LinearSearch_mips.txt
-	java -classpath test.input LinearSearch > test/input/LinearSearch_java.txt
+	java -classpath test/input LinearSearch > test/input/LinearSearch_java.txt
 	diff --strip-trailing-cr -B test/input/LinearSearch_mips.txt test/input/LinearSearch_java.txt
 	javac $(JAVAC_OPTIONS) test/input/LinkedList.java
 	$(CODEGEN) < test/input/LinkedList.java > test/input/LinkedList.asm
 	$(MARS) test/input/LinkedList.asm > test/input/LinkedList_mips.txt
-	java -classpath test.input LinkedList > test/input/LinkedList_java.txt
+	java -classpath test/input LinkedList > test/input/LinkedList_java.txt
 	diff --strip-trailing-cr -B test/input/LinkedList_mips.txt test/input/LinkedList_java.txt
 	javac $(JAVAC_OPTIONS) test/input/QuickSort.java
 	$(CODEGEN) < test/input/QuickSort.java > test/input/QuickSort.asm
 	$(MARS) test/input/QuickSort.asm > test/input/QuickSort_mips.txt
-	java -classpath test.input QuickSort > test/input/QuickSort_java.txt
+	java -classpath test/input QuickSort > test/input/QuickSort_java.txt
 	diff --strip-trailing-cr -B test/input/QuickSort_mips.txt test/input/QuickSort_java.txt
 	javac $(JAVAC_OPTIONS) test/input/TreeVisitor.java
 	$(CODEGEN) < test/input/TreeVisitor.java > test/input/TreeVisitor.asm
 	$(MARS) test/input/TreeVisitor.asm > test/input/TreeVisitor_mips.txt
-	java -classpath test.input TreeVisitor > test/input/TreeVisitor_java.txt
+	java -classpath test/input TreeVisitor > test/input/TreeVisitor_java.txt
 	diff --strip-trailing-cr -B test/input/TreeVisitor_mips.txt test/input/TreeVisitor_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test1.java
 	$(CODEGEN) < test/old/Test1.java > test/old/Test1.asm
 	$(MARS) test/old/Test1.asm > test/old/Test1_mips.txt
-	java -classpath test.old Test1 > test/old/Test1_java.txt
+	java -classpath test/old Test1 > test/old/Test1_java.txt
 	diff --strip-trailing-cr -B test/old/Test1_mips.txt test/old/Test1_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test2.java
 	$(CODEGEN) < test/old/Test2.java > test/old/Test2.asm
 	$(MARS) test/old/Test2.asm > test/old/Test2_mips.txt
-	java -classpath test.old Test2 > test/old/Test2_java.txt
+	java -classpath test/old Test2 > test/old/Test2_java.txt
 	diff --strip-trailing-cr -B test/old/Test2_mips.txt test/old/Test2_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test3.java
 	$(CODEGEN) < test/old/Test3.java > test/old/Test3.asm
 	$(MARS) test/old/Test3.asm > test/old/Test3_mips.txt
-	java -classpath test.old Test3 > test/old/Test3_java.txt
+	java -classpath test/old Test3 > test/old/Test3_java.txt
 	diff --strip-trailing-cr -B test/old/Test3_mips.txt test/old/Test3_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test4.java
 	$(CODEGEN) < test/old/Test4.java > test/old/Test4.asm
 	$(MARS) test/old/Test4.asm > test/old/Test4_mips.txt
-	java -classpath test.old Test4 > test/old/Test4_java.txt
+	java -classpath test/old Test4 > test/old/Test4_java.txt
 	diff --strip-trailing-cr -B test/old/Test4_mips.txt test/old/Test4_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test5.java
 	$(CODEGEN) < test/old/Test5.java > test/old/Test5.asm
 	$(MARS) test/old/Test5.asm > test/old/Test5_mips.txt
-	java -classpath test.old Test5 > test/old/Test5_java.txt
+	java -classpath test/old Test5 > test/old/Test5_java.txt
 	diff --strip-trailing-cr -B test/old/Test5_mips.txt test/old/Test5_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test6.java
 	$(CODEGEN) < test/old/Test6.java > test/old/Test6.asm
 	$(MARS) test/old/Test6.asm > test/old/Test6_mips.txt
-	java -classpath test.old Test6 > test/old/Test6_java.txt
+	java -classpath test/old Test6 > test/old/Test6_java.txt
 	diff --strip-trailing-cr -B test/old/Test6_mips.txt test/old/Test6_java.txt
