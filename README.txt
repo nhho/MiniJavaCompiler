@@ -24,7 +24,8 @@
   all cases can be handled, including 1-15 and 16(bonus)
 
 [D. Acknowledgement]
-  - no use of third party code, files, and library
+  - some test are from piazza of CSCI3120 and  https://github.com/isaackwan/csci3120-minijava-testcases
+  - no other use of third party code, files, and library
 
 [E. Additional Information]
   - none
