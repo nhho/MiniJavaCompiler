@@ -22,4 +22,4 @@ check: test$(A).class
 	$(CODEGEN) < test$(A).java > test$(A).asm
 	$(MARS) test$(A).asm > out_mips$(A).txt
 	java test$(A) > out_java$(A).txt
-	diff -B out_mips$(A).txt out_java$(A).txt
+	diff --strip-trailing-cr -B out_mips$(A).txt out_java$(A).txt
