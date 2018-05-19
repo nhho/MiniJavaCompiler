@@ -63,6 +63,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
 
     minusStack(); // ra
     minusStack(); // fp
+    minusStack(); // extra
     minusStack(); // current instance
     out.println("addi $fp, $sp, 0");
 
@@ -376,6 +377,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   public void visit(Call n) {
     push("ra");
     push("fp");
+    minusStack(); // extra
     n.e.accept(this);
     branch++;
     out.println("bne $a0, $0, _branch_" + branch);
@@ -395,18 +397,23 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     out.println("sll $fp, $fp, 2");
     out.println("add $fp, $fp, $sp");
     Class targetClass = symbolTable.getClass(n.cname);
+    int ext = 0;
     while (true) {
       if (targetClass.getMethod(n.i.s) != null) {
+        ext *= 4;
+        out.println("li $a0, " + ext);
+        out.println("sw $a0, 8($fp)    # extra for " + n.cname + " to " + targetClass.id);
         out.println("jal _method_" + targetClass.id + "." + n.i.s);
         break;
       }
+      ext += targetClass.fields.size();
       if (targetClass.parent == null) {
         System.out.println("fail to resolve method " + n.cname + "." + n.i.s);
         System.exit(-1);
       }
       targetClass = symbolTable.getClass(targetClass.parent);
     }
-    for (int i = 0; i <= n.el.size(); i++) {
+    for (int i = 0; i <= n.el.size() + 1; i++) {
       addStack();
     }
     pop("fp");
@@ -513,7 +520,10 @@ public class CodeGenVisitor extends DepthFirstVisitor {
       out.println("addi $a0, $fp, " + cnt * -4);
       return;
     }
-    out.println("lw $a0, 4($fp)    # look for instance variable " + a);
+    out.println("lw $a0, 4($fp)    # look for instance variable " + a + " from " + currClass.id
+        + "." + currMethod.id);
+    out.println("lw $t0, 8($fp)    # load extra");
+    out.println("add $a0, $a0, $t0 # add extra");
     cnt = checkClassVar(a);
     out.println("addi $a0, $a0, " + cnt * 4);
   }
@@ -524,6 +534,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     while (true) {
       for (String key: targetClass.fields.keySet()) {
         if (a.equals(key)) {
+          out.println("                  # found in " + targetClass.id);
           return cnt;
         }
         cnt++;
