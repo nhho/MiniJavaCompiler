@@ -1,6 +1,7 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class True extends Exp {
   public void accept(Visitor v) {

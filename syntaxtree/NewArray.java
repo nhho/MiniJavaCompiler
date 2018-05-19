@@ -1,12 +1,13 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class NewArray extends Exp {
   public Exp e;
 
   public NewArray(Exp ae) {
-    e=ae;
+    e = ae;
   }
 
   public void accept(Visitor v) {

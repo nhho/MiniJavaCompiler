@@ -1,12 +1,13 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class NewObject extends Exp {
   public IdentifierType i;
 
   public NewObject(IdentifierType ai) {
-    i=ai;
+    i = ai;
   }
 
   public void accept(Visitor v) {

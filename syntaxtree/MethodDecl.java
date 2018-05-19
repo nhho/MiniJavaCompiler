@@ -1,6 +1,7 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class MethodDecl {
   public Type t;
@@ -12,8 +13,13 @@ public class MethodDecl {
   // public int idRef;
 
   public MethodDecl(Type at, Identifier ai, FormalList afl, VarDeclList avl,
-                    StatementList asl, Exp ae) {
-    t=at; i=ai; fl=afl; vl=avl; sl=asl; e=ae;
+      StatementList asl, Exp ae) {
+    t = at;
+    i = ai;
+    fl = afl;
+    vl = avl;
+    sl = asl;
+    e = ae;
   }
 
   public void accept(Visitor v) {

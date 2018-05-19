@@ -1,6 +1,7 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 /*
    class i extends j {
@@ -15,8 +16,11 @@ public class ClassDeclExtends extends ClassDecl {
   public MethodDeclList ml;   // Sequence of method declarations
 
   public ClassDeclExtends(IdentifierType ai, IdentifierType aj,
-                  VarDeclList avl, MethodDeclList aml) {
-    i=ai; j=aj; vl=avl; ml=aml;
+      VarDeclList avl, MethodDeclList aml) {
+    i = ai;
+    j = aj;
+    vl = avl;
+    ml = aml;
   }
 
   public void accept(Visitor v) {

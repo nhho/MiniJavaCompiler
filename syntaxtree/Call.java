@@ -1,6 +1,7 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class Call extends Exp {
   public Exp e;
@@ -9,7 +10,9 @@ public class Call extends Exp {
   public String cname;
 
   public Call(Exp ae, Identifier ai, ExpList ael) {
-    e=ae; i=ai; el=ael;
+    e = ae;
+    i = ai;
+    el = ael;
   }
 
   public void accept(Visitor v) {

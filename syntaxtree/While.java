@@ -1,13 +1,15 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class While extends Statement {
   public Exp e;
   public Statement s;
 
   public While(Exp ae, Statement as) {
-    e=ae; s=as;
+    e = ae;
+    s = as;
   }
 
   public void accept(Visitor v) {

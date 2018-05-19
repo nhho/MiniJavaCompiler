@@ -1,6 +1,7 @@
 package syntaxtree;
-import visitor.Visitor;
+
 import visitor.TypeVisitor;
+import visitor.Visitor;
 
 public class ClassDeclSimple extends ClassDecl {
   public IdentifierType i;
@@ -8,7 +9,9 @@ public class ClassDeclSimple extends ClassDecl {
   public MethodDeclList ml;
 
   public ClassDeclSimple(IdentifierType ai, VarDeclList avl, MethodDeclList aml) {
-    i=ai; vl=avl; ml=aml;
+    i = ai;
+    vl = avl;
+    ml = aml;
   }
 
   public void accept(Visitor v) {
