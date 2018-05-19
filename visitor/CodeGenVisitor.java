@@ -186,7 +186,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     n.e.accept(this);
     branch++;
     int b = branch;
-    out.println("beq $a0, $0, _branch_" + b);
+    out.println("beq $a0, $0, _branch_" + b + "_a");
     n.s1.accept(this);
     out.println("j _branch_" + b + "_b");
     out.println("_branch_" + b + "_a:");
@@ -202,7 +202,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     int b = branch;
     out.println("_branch_" + b + "_a:");
     n.e.accept(this);
-    out.println("beq $a0, $0, _branch_" + b);
+    out.println("beq $a0, $0, _branch_" + b + "_b");
     n.s.accept(this);
     out.println("j _branch_" + b + "_a");
     out.println("_branch_" + b + "_b:");
@@ -250,8 +250,8 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     pop("t0");
     out.println("lw $t1, -4($t0)");
     branch++;
-    out.println("bltz $a0, _branch_a" + branch);
-    out.println("blt $a0, $t1, _branch_b" + branch);
+    out.println("bltz $a0, _branch_" + branch + "_a");
+    out.println("blt $a0, $t1, _branch" + branch + "_b");
     out.println("_branch_" + branch + "_a:");
     out.println("la $a0, _msg_index_out_of_bound_exception");
     // out.println("li $a1, 29");
@@ -337,8 +337,8 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     pop("t0");
     out.println("lw $t1, -4($t0)");
     branch++;
-    out.println("bltz $a0, _branch_a" + branch);
-    out.println("blt $a0, $t1, _branch_b" + branch);
+    out.println("bltz $a0, _branch" + branch + "_a");
+    out.println("blt $a0, $t1, _branch" + branch + "_b");
     out.println("_branch_" + branch + "_a:");
     out.println("la $a0, _msg_index_out_of_bound_exception");
     // out.println("li $a1, 29");
