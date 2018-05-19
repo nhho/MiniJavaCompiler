@@ -251,7 +251,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     out.println("lw $t1, -4($t0)");
     branch++;
     out.println("bltz $a0, _branch_" + branch + "_a");
-    out.println("blt $a0, $t1, _branch" + branch + "_b");
+    out.println("blt $a0, $t1, _branch_" + branch + "_b");
     out.println("_branch_" + branch + "_a:");
     out.println("la $a0, _msg_index_out_of_bound_exception");
     // out.println("li $a1, 29");
@@ -337,8 +337,8 @@ public class CodeGenVisitor extends DepthFirstVisitor {
     pop("t0");
     out.println("lw $t1, -4($t0)");
     branch++;
-    out.println("bltz $a0, _branch" + branch + "_a");
-    out.println("blt $a0, $t1, _branch" + branch + "_b");
+    out.println("bltz $a0, _branch_" + branch + "_a");
+    out.println("blt $a0, $t1, _branch_" + branch + "_b");
     out.println("_branch_" + branch + "_a:");
     out.println("la $a0, _msg_index_out_of_bound_exception");
     // out.println("li $a1, 29");
