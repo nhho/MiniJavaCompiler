@@ -8,7 +8,7 @@ CODEGEN = java -classpath .. Main
 
 # specify the command to run MARS
 # "nc" means "Don't output the copyright message"
-MARS = java -jar Mars4_5.jar nc 
+MARS = java -jar Mars4_5.jar nc
 
 # To compile a particular test case in order to obtain the expected output
 %.class: %.java

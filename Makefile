@@ -22,7 +22,7 @@ MainPrettyPrint.class: MainPrettyPrint.java $(PARSER) $(AST_CLASS) $(VISITOR_CLA
 %.class: %.java
 	javac $(JAVAC_OPTIONS) $<
 
-$(PARSER): $(JAVACC_FILE) 
+$(PARSER): $(JAVACC_FILE)
 	# Create the directory if it does not exist
 	mkdir -p $(JAVACC_OUTDIR)
 	javacc -OUTPUT_DIRECTORY="$(JAVACC_OUTDIR)" $(JAVACC_FILE)
@@ -39,4 +39,4 @@ test0: test.java
 
 # To check if test.java is syntactically and semantically correct
 test1: test.java
-	java MainPrettyPrint < test.java 
+	java MainPrettyPrint < test.java
