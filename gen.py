@@ -1,4 +1,4 @@
-from os import walk, system
+from os import walk
 path = 'test'
 cnt = 0
 for i in walk(path):
