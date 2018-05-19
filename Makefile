@@ -36,6 +36,8 @@ clean:
 	rm -f test/*.asm test/*.class test/*.txt
 	rm -f test/input/*.asm test/input/*.class test/input/*.txt
 	rm -f test/old/*.asm test/old/*.class test/old/*.txt
+	rm -f test/piazza/*.asm test/piazza/*.class test/piazza/*.txt
+	rm -f test/self/*.asm test/self/*.class test/self/*.txt
 
 test0: test.java
 	java Main < test.java > test0.asm
@@ -226,11 +228,6 @@ tests:
 	$(MARS) test/input/QuickSort.asm > test/input/QuickSort_mips.txt
 	java -classpath test/input QuickSort > test/input/QuickSort_java.txt
 	diff --strip-trailing-cr -B test/input/QuickSort_mips.txt test/input/QuickSort_java.txt
-	javac $(JAVAC_OPTIONS) test/input/TreeVisitor.java
-	$(CODEGEN) < test/input/TreeVisitor.java > test/input/TreeVisitor.asm
-	$(MARS) test/input/TreeVisitor.asm > test/input/TreeVisitor_mips.txt
-	java -classpath test/input TreeVisitor > test/input/TreeVisitor_java.txt
-	diff --strip-trailing-cr -B test/input/TreeVisitor_mips.txt test/input/TreeVisitor_java.txt
 	javac $(JAVAC_OPTIONS) test/old/Test1.java
 	$(CODEGEN) < test/old/Test1.java > test/old/Test1.asm
 	$(MARS) test/old/Test1.asm > test/old/Test1_mips.txt
@@ -261,3 +258,23 @@ tests:
 	$(MARS) test/old/Test6.asm > test/old/Test6_mips.txt
 	java -classpath test/old Test6 > test/old/Test6_java.txt
 	diff --strip-trailing-cr -B test/old/Test6_mips.txt test/old/Test6_java.txt
+	javac $(JAVAC_OPTIONS) test/self/ext.java
+	$(CODEGEN) < test/self/ext.java > test/self/ext.asm
+	$(MARS) test/self/ext.asm > test/self/ext_mips.txt
+	java -classpath test/self ext > test/self/ext_java.txt
+	diff --strip-trailing-cr -B test/self/ext_mips.txt test/self/ext_java.txt
+	javac $(JAVAC_OPTIONS) test/self/instance.java
+	$(CODEGEN) < test/self/instance.java > test/self/instance.asm
+	$(MARS) test/self/instance.asm > test/self/instance_mips.txt
+	java -classpath test/self instance > test/self/instance_java.txt
+	diff --strip-trailing-cr -B test/self/instance_mips.txt test/self/instance_java.txt
+	javac $(JAVAC_OPTIONS) test/self/paravar.java
+	$(CODEGEN) < test/self/paravar.java > test/self/paravar.asm
+	$(MARS) test/self/paravar.asm > test/self/paravar_mips.txt
+	java -classpath test/self paravar > test/self/paravar_java.txt
+	diff --strip-trailing-cr -B test/self/paravar_mips.txt test/self/paravar_java.txt
+	javac $(JAVAC_OPTIONS) test/self/seq.java
+	$(CODEGEN) < test/self/seq.java > test/self/seq.asm
+	$(MARS) test/self/seq.asm > test/self/seq_mips.txt
+	java -classpath test/self seq > test/self/seq_java.txt
+	diff --strip-trailing-cr -B test/self/seq_mips.txt test/self/seq_java.txt

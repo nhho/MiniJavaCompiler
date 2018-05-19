@@ -1,7 +1,7 @@
 // Test
 //   Class and method
 class test22 {
-    public static void main(String[] _str){
+    public static void main(String[] str_){
       Foo f;
       int a;
       int b;

@@ -25,9 +25,9 @@ class Foo {
   int x;
   int y;
 
-  public int init(int _x, int _y) {
-    x = _x;
-    y = _y;
+  public int init(int x_, int y_) {
+    x = x_;
+    y = y_;
     return 0;
   }
 
@@ -49,8 +49,8 @@ class Foo {
 class Bar {
   Foo foo;
  
-  public int setFoo(Foo _foo) {
-    foo = _foo;
+  public int setFoo(Foo foo_) {
+    foo = foo_;
     return 0;
   }
 

@@ -3,6 +3,7 @@ class Test2 {
       int x;
       int y;
       {
+        y = 0;
         x = 10 + y;
         y = x + 6;
 	System.out.println(x);

@@ -7,7 +7,7 @@ class Test6 {
         foo = new Foo();
         dummy = foo.init();
         dummy = foo.print();
-
+         sum = 0-1;
         sum = foo.sum(sum, 5+sum);
 
 	System.out.println(sum); 

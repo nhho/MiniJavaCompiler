@@ -3,7 +3,7 @@ path = 'test'
 cnt = 0
 for i in walk(path):
     for j in i[2]:
-        if j.endswith('.java'):
+        if j.endswith('.java') and not j.startswith('null'):
             cnt += 1
             name = j[:-5]
             file_path = i[0].replace('\\', '/') + '/' + name
