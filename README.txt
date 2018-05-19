@@ -20,7 +20,7 @@
     source: https://piazza.com/class/jb23yysuffr2fx?cid=113
 
 [C. Tests]
-  Describe which cases (1-15, 16) your program can and cannot handles.
+  all cases can be handled, including 1-15 and 16(bonus)
 
 [D. Acknowledgement]
   - no use of third party code, files, and library
