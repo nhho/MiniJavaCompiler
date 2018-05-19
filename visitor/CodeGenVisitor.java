@@ -236,6 +236,7 @@ public class CodeGenVisitor extends DepthFirstVisitor {
   // cgen: i[e1] = e2
   public void visit(ArrayAssign n) {
     getIdentifierAddress(n.i.s);
+    out.println("lw $a0, 0($a0)");
     branch++;
     out.println("bne $a0, $0, _branch_" + branch);
     out.println("la $a0, _msg_null_pointer_exception");
